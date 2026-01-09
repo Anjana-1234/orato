@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./SignIn.css";
+import logo from "../pages/orato-logo.jpg";
+
 
 const API = "http://localhost:5000/api/auth";
 
@@ -24,7 +26,7 @@ export default function SignIn() {
   return (
   <div className="auth-container">
     <div className="auth-card">
-      <img src="orato-logo.jpg" alt="Orato Robot" className="logo" />
+      <img src={logo} alt="Orato Robot" className="logo" />
 
       <h2>Welcome Back</h2>
       <p className="subtitle">Sign in to continue</p>
