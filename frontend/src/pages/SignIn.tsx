@@ -60,6 +60,15 @@ export default function SignIn() {
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
 
+          <div className="text-right">
+          <Link
+              to="/forgot-password"
+              className="text-sm text-purple-600 hover:underline"
+              >
+              Forgot Password?
+          </Link>
+          </div>
+
           <button
             type="submit"
             className="w-full py-2 rounded-lg text-white font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90 transition"
