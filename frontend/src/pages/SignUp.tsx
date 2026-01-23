@@ -1,11 +1,42 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import logo from "../pages/orato-logo.jpg";
 
+const API = "http://localhost:5000/api/auth";
+
 const SignUp = () => {
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match!");
+      return;
+    }
+
+    try {
+      const res = await axios.post(`${API}/signup`, {
+        fullName,
+        email,
+        password,
+      });
+
+      alert(res.data.message);
+      navigate("/signin");
+    } catch (error: any) {
+      alert(error.response?.data?.message || "Signup failed");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
@@ -24,10 +55,12 @@ const SignUp = () => {
         </p>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
             placeholder="Full Name"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
@@ -35,6 +68,8 @@ const SignUp = () => {
           <input
             type="email"
             placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
@@ -42,6 +77,8 @@ const SignUp = () => {
           <input
             type="password"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
@@ -49,6 +86,8 @@ const SignUp = () => {
           <input
             type="password"
             placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
@@ -73,7 +112,6 @@ const SignUp = () => {
             Sign In
           </Link>
         </p>
-
       </div>
     </div>
   );
