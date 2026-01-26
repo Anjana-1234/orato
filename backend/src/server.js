@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth-routes.js";
 import otpRoutes from "./routes/otpRoutes.js";
+import userRoutes from "./routes/user-routes.js"; 
 
 // Load env variables FIRST
 dotenv.config(); 
@@ -21,6 +22,7 @@ connectDB();
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/otp", otpRoutes);
+app.use("/api/users", userRoutes);
 
 // Test route
 app.get("/", (req, res) => {

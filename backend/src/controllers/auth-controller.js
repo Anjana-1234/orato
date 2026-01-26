@@ -3,14 +3,18 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password } = req.body;  // Get data from request
 
+   // Check if user already exists
   const existingUser = await User.findOne({ email });
   if (existingUser) {
     return res.status(400).json({ message: "User already exists" });
   }
 
+  // Hash the password (SECURITY!)
   const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Create new user in database
   const user = await User.create({
     fullName,
     email,
@@ -20,6 +24,7 @@ export const signup = async (req, res) => {
   res.status(201).json({ message: "Account created successfully" });
 };
 
+// signin logic
 export const signin = async (req, res) => {
   const { email, password } = req.body;
 
