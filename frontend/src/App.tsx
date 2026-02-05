@@ -1,12 +1,12 @@
-import logo from "../public/orato-logo.jpg";
+import Navbar from './components/Navbar';
+import { useState, useEffect } from 'react';
 
-export default function App() {
+export default function Status() {
+  const [battery, setBattery] = useState(85);
+
   return (
-    <>
-      <img src={logo} alt="Orato Logo" className="w-32 h-32 mx-auto my-4" />
-      <h1 className="text-3xl font-bold text-blue-500">
-        Welcome to Orato Robot !
-      </h1>
-    </>
+    <div style={{ backgroundColor: '#0f172a', minHeight: '100vh', color: 'white' }}>
+      <Navbar />
+    </div>
   );
 }
