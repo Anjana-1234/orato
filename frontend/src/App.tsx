@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import Language from './components/Language';
 import AppPreferences from './components/AppPreferences';
 import Notifications from './components/Notifications';
+import RecommendedSettings from './components/RecommendedSettings';
 import { Mail, Edit2, Key, User, Bot, Settings } from 'lucide-react';
 
 export default function App() {
@@ -70,6 +71,9 @@ export default function App() {
 
       case 'Notifications':
         return <Notifications />;
+
+      case 'Recommended Settings':
+        return <RecommendedSettings />;
 
       // built yet
       default:
