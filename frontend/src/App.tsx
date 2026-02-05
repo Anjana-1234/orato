@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Language from './components/Language';
+import AppPreferences from './components/AppPreferences';
 import { Mail, Edit2, Key, User, Bot, Settings } from 'lucide-react';
 
 export default function App() {
@@ -62,6 +63,9 @@ export default function App() {
         );
       case 'Language & Region':
         return <Language />;
+
+      case 'App Preferences':
+        return <AppPreferences />;
 
       // built yet
       default:
