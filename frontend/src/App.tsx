@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
+import Language from './components/Language';
 import { Mail, Edit2, Key, User, Bot, Settings } from 'lucide-react';
 
 export default function App() {
@@ -59,6 +60,8 @@ export default function App() {
             </div>
           </div>
         );
+      case 'Language & Region':
+        return <Language />;
 
       // built yet
       default:
