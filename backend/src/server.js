@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth-routes.js";
 import otpRoutes from "./routes/otpRoutes.js";
 import userRoutes from "./routes/user-routes.js"; 
+import { verifyEmailConfig } from "./services/emailService.js";
 
 // Load env variables FIRST
 dotenv.config(); 
@@ -18,6 +19,9 @@ app.use(express.json());
 
 // Connect DB
 connectDB(); 
+
+// SendEmail
+verifyEmailConfig();
 
 // Routes
 app.use("/api/auth", authRoutes);
