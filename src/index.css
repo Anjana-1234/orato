@@ -1,0 +1,83 @@
+:root {
+    --primary-color: #5d5fef;
+    /* Purple/Indigo */
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --bg-color: #f7f9fc;
+    --card-bg: #ffffff;
+    --card-radius: 20px;
+    --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    --text-dark: #2c3e50;
+    --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-family);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+}
+
+.custom-card {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    border: none;
+    padding: 20px;
+    height: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+
+.custom-card:hover {
+    transform: translateY(-2px);
+}
+
+.card-title {
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.nav-link {
+    color: #6b7280;
+    font-weight: 500;
+    padding: 0.5rem 1rem !important;
+    border-radius: 8px;
+}
+
+.nav-link.active {
+    background-color: transparent !important;
+    color: var(--primary-color) !important;
+    font-weight: 700;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: #3b3b98 !important;
+    /* Deep Purple */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Custom Gradients/Progress Bars */
+.progress-bar {
+    border-radius: 10px;
+}
+
+/* Rounded buttons */
+.btn-rounded {
+    border-radius: 50px;
+}
+
+/* Chart container styling */
+.chart-container {
+    width: 100%;
+    height: 300px;
+}
