@@ -1,186 +1,132 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import logo from "../pages/orato-logo.jpg";
+import logo from "../assets/logo.png";
 
-// Backend API base URL
-const API = "http://localhost:5001/api/otp";
+const API = "http://localhost:5001/api/auth";
 
 const ResetPassword = () => {
-  const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  // Get email from navigation state (passed from ForgotPassword page)
-  const email = location.state?.email || "";
 
-  /**
-   * Handle reset password form submission
-   * Verifies OTP and updates password
-   */
+  // Get token from URL (e.g., /reset-password?token=abc123)
+  const token = searchParams.get("token");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation: Check if passwords match
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      alert("Passwords do not match!");
       return;
     }
 
-    // Validation: Check password length
     if (password.length < 6) {
-      alert("Password must be at least 6 characters");
+      alert("Password must be at least 6 characters!");
       return;
     }
 
-    // Validation: Check if email exists
-    if (!email) {
-      alert("Email not found. Please go back to forgot password page.");
-      navigate("/forgot-password");
+    if (!token) {
+      alert("Invalid or missing reset token!");
       return;
     }
 
     setLoading(true);
 
     try {
-      // Send POST request to backend
       const res = await axios.post(`${API}/reset-password`, {
-        email,
-        otp,
-        password
+        token,
+        newPassword: password,
       });
 
-      // Success: Show message and redirect to signin
-      alert(res.data.message);
+      alert(res.data.message || "Password reset successful!");
       navigate("/signin");
-
     } catch (error: any) {
       console.error("Reset password error:", error);
-      
       if (error.response) {
-        alert(error.response.data.message || "Failed to reset password");
+        alert(error.response.data.message || "Failed to reset password!");
       } else {
-        alert("Cannot connect to server. Please check if backend is running.");
+        alert("Failed to reset password. Please try again.");
       }
     } finally {
       setLoading(false);
     }
   };
 
-  /**
-   * Handle resend OTP
-   */
-  const handleResendOtp = async () => {
-    if (!email) {
-      alert("Email not found. Please go back to forgot password page.");
-      return;
-    }
-
-    try {
-      const res = await axios.post(`${API}/resend`, { email });
-      alert(res.data.message);
-    } catch (error: any) {
-      console.error("Resend OTP error:", error);
-      alert(error.response?.data?.message || "Failed to resend OTP");
-    }
-  };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src={logo}
-            alt="Orato Logo"
-            className="w-20 h-20 rounded-xl shadow-md"
-          />
+          <img src={logo} alt="Orato Logo" className="w-20 h-20 rounded-xl shadow-md" />
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-center text-gray-800">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
           Reset Password
         </h2>
-        <p className="text-center text-gray-500 mb-2">
-          Enter OTP and create a new password
+        <p className="text-center text-gray-500 mb-6">
+          Enter your new password
         </p>
-        {email && (
-          <p className="text-center text-sm text-gray-600 mb-4">
-            OTP sent to: <strong>{email}</strong>
-          </p>
-        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-            disabled={loading}
-            maxLength={6}
-            className="w-full px-4 py-2 border rounded-lg
-                       focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              New Password
+            </label>
+            <input
+              type="password"
+              placeholder="Minimum 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              disabled={loading}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="New Password (min 6 characters)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            disabled={loading}
-            minLength={6}
-            className="w-full px-4 py-2 border rounded-lg
-                       focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            disabled={loading}
-            className="w-full px-4 py-2 border rounded-lg
-                       focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Confirm New Password
+            </label>
+            <input
+              type="password"
+              placeholder="Re-enter your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg text-white font-semibold
-                       bg-gradient-to-r from-blue-500 to-purple-600
-                       hover:opacity-90 transition
+            className={`w-full py-3 rounded-lg text-white font-semibold 
+                       bg-gradient-to-r from-green-500 to-emerald-600 
+                       hover:from-green-600 hover:to-emerald-700
+                       transition-all duration-200 shadow-md hover:shadow-lg
                        ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {loading ? "Resetting Password..." : "Reset Password"}
+            {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
 
-        {/* Resend OTP */}
-        <div className="text-center mt-4">
-          <button
-            onClick={handleResendOtp}
-            className="text-sm text-purple-600 hover:underline"
+        {/* Back to Sign In */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/signin"
+            className="text-sm text-green-600 hover:text-green-700 hover:underline font-medium"
           >
-            Didn't receive OTP? Resend
-          </button>
-        </div>
-
-        {/* Footer */}
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Back to{" "}
-          <Link to="/signin" className="text-purple-600 hover:underline">
-            Sign In
+            ← Back to Sign In
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

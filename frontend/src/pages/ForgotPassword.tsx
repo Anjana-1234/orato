@@ -1,42 +1,32 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import logo from "../pages/orato-logo.jpg";
+import logo from "../assets/logo.png";
 
-// Backend API base URL
-const API = "http://localhost:5001/api/otp";
+const API = "http://localhost:5001/api/auth";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  /**
-   * Handle forgot password form submission
-   * Sends OTP to user's email
-   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setLoading(true);
+    setMessage("");
+    setError("");
 
     try {
-      // Send POST request to backend
       const res = await axios.post(`${API}/forgot-password`, { email });
-
-      // Success: Show message and redirect to reset password page
-      alert(res.data.message);
-      
-      // Pass email to reset password page
-      navigate("/reset-password", { state: { email } });
-
+      setMessage(res.data.message || "Password reset link sent to your email!");
+      setEmail(""); // Clear the input
     } catch (error: any) {
       console.error("Forgot password error:", error);
-      
       if (error.response) {
-        alert(error.response.data.message || "Failed to send OTP");
+        setError(error.response.data.message || "Email not found!");
       } else {
-        alert("Cannot connect to server. Please check if backend is running.");
+        setError("Failed to send reset link. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -44,58 +34,75 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src={logo}
-            alt="Orato Logo"
-            className="w-20 h-20 rounded-xl shadow-md"
-          />
+          <img src={logo} alt="Orato Logo" className="w-20 h-20 rounded-xl shadow-md" />
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold text-center text-gray-800">
-          Forgot Password
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
+          Forgot Password?
         </h2>
         <p className="text-center text-gray-500 mb-6">
-          Enter your email to receive an OTP
+          Enter your email to receive a password reset link
         </p>
+
+        {/* Success Message */}
+        {message && (
+          <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
+            {message}
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={loading}
-            className="w-full px-4 py-2 border rounded-lg
-                       focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email Address
+            </label>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full py-2 rounded-lg text-white font-semibold
-                       bg-gradient-to-r from-blue-500 to-purple-600
-                       hover:opacity-90 transition
+            className={`w-full py-3 rounded-lg text-white font-semibold 
+                       bg-gradient-to-r from-green-500 to-emerald-600 
+                       hover:from-green-600 hover:to-emerald-700
+                       transition-all duration-200 shadow-md hover:shadow-lg
                        ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {loading ? "Sending OTP..." : "Send OTP"}
+            {loading ? "Sending..." : "Send Reset Link"}
           </button>
         </form>
 
-        {/* Footer */}
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Remember your password?{" "}
-          <Link to="/signin" className="text-purple-600 hover:underline">
-            Sign In
+        {/* Back to Sign In */}
+        <div className="mt-6 text-center">
+          <Link
+            to="/signin"
+            className="text-sm text-green-600 hover:text-green-700 hover:underline font-medium"
+          >
+            ← Back to Sign In
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );
