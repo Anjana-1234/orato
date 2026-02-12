@@ -79,7 +79,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn = false }) => {
             </li>
             <li>
               <NavLink to="/setting" className={navLinkClass} onClick={closeMobileMenu}>
-                Setting
+                Settings
               </NavLink>
             </li>
             <li>
