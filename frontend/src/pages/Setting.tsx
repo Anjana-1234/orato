@@ -5,6 +5,7 @@ import LanguagePreferences from '../components/Languagepreferences'; // For impo
 import Notifications from '../components/Notifications'; // For importing Notifications component.
 import AudioDisplay from '../components/AudioDisplay'; // For importing Audio Display component.
 import PrivacyData from '../components/PrivacyData'; // For importing Privacy & Data component.
+import AccountActions from '../components/AccountActions'; // For importing Account Actions component.
 
 
 const Settings: React.FC = () => {
@@ -23,6 +24,7 @@ const Settings: React.FC = () => {
           <Notifications />
           <AudioDisplay />
           <PrivacyData />
+          <AccountActions />
         </div>
       </div>
     </div>
