@@ -105,13 +105,14 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn = false }) => {
                 <span className="font-medium hidden md:inline">Account</span>
               </Link>
             ) : (
-              <Link
-                to="/login"
-                className="gradient-primary text-white px-9 py-2.5 rounded-lg font-semibold hover:-translate-y-0.5 hover:shadow-lg transition-all no-underline"
-                onClick={closeMobileMenu}
-              >
-                Login
-              </Link>
+              // In Navbar component - Login button (top right)
+            // In Navbar component - Login button (top right)
+<Link 
+  to="/signin"  // ← Navigate to signin page
+  className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+>
+  Login
+</Link>
             )}
 
             {/* Hamburger Menu */}
