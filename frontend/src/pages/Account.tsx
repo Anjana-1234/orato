@@ -17,8 +17,6 @@ const Account: React.FC = () => {
 
         {/* PROFILE CARD */}
         <div className="bg-white rounded-xl shadow p-6 mb-8">
-
-          {/* TOP ROW */}
           <div className="flex justify-between items-start mb-6">
 
             <div className="flex items-center gap-4">
@@ -37,9 +35,7 @@ const Account: React.FC = () => {
             </button>
           </div>
 
-          {/* STATS ROW */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-gray-500 text-sm">Total Study Time</p>
               <p className="font-bold text-xl">47.5 hours</p>
@@ -59,38 +55,61 @@ const Account: React.FC = () => {
               <p className="text-gray-500 text-sm">Lessons Completed</p>
               <p className="font-bold text-xl">47</p>
             </div>
-
           </div>
         </div>
 
-        {/* LEARNING GOALS */}
-        <div className="bg-white rounded-xl shadow p-6 mb-8">
-          <div className="flex justify-between mb-4">
-            <h2 className="text-2xl font-bold">Learning Goals</h2>
-            <button className="text-green-600 font-medium">+ Add Goal</button>
-          </div>
+        {/* TWO COLUMN SECTION */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          <div className="space-y-4">
-
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold">Achieve fluency in English</h3>
-              <p className="text-sm text-gray-500">Target: 2026-12-31</p>
-              <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                <div className="bg-green-600 h-2 rounded w-2/3"></div>
-              </div>
-              <p className="text-sm mt-1">65% complete</p>
+          {/* LEARNING GOALS */}
+          <div className="lg:col-span-2 bg-white rounded-xl shadow p-6">
+            <div className="flex justify-between mb-4">
+              <h2 className="text-2xl font-bold">Learning Goals</h2>
+              <button className="text-green-600 font-medium">+ Add Goal</button>
             </div>
 
-            <div className="border rounded-lg p-4">
-              <h3 className="font-semibold">Master English pronunciation</h3>
-              <p className="text-sm text-gray-500">Target: 2026-06-30</p>
-              <div className="w-full bg-gray-200 h-2 rounded mt-2">
-                <div className="bg-green-600 h-2 rounded w-1/2"></div>
-              </div>
-              <p className="text-sm mt-1">40% complete</p>
-            </div>
+            <div className="space-y-4">
 
+              <div className="border rounded-lg p-4">
+                <h3 className="font-semibold">Achieve fluency in English</h3>
+                <p className="text-sm text-gray-500">Target: 2026-12-31</p>
+                <div className="w-full bg-gray-200 h-2 rounded mt-2">
+                  <div className="bg-green-600 h-2 rounded w-2/3"></div>
+                </div>
+                <p className="text-sm mt-1">65% complete</p>
+              </div>
+
+              <div className="border rounded-lg p-4">
+                <h3 className="font-semibold">Master English pronunciation</h3>
+                <p className="text-sm text-gray-500">Target: 2026-06-30</p>
+                <div className="w-full bg-gray-200 h-2 rounded mt-2">
+                  <div className="bg-green-600 h-2 rounded w-1/2"></div>
+                </div>
+                <p className="text-sm mt-1">40% complete</p>
+              </div>
+
+            </div>
           </div>
+
+          {/* LANGUAGES PANEL */}
+          <div className="bg-white rounded-xl shadow p-6">
+            <h2 className="text-xl font-bold mb-4">Languages</h2>
+
+            <div className="space-y-4">
+              <div>
+                <p className="font-medium">English</p>
+                <p className="text-sm text-gray-500">Intermediate (B1)</p>
+                <div className="w-full bg-gray-200 h-2 rounded mt-2">
+                  <div className="bg-blue-500 h-2 rounded w-3/4"></div>
+                </div>
+              </div>
+
+              <button className="w-full border border-gray-300 rounded-lg py-2 hover:bg-gray-100">
+                + Add Language
+              </button>
+            </div>
+          </div>
+
         </div>
 
       </main>
@@ -101,15 +120,3 @@ const Account: React.FC = () => {
 };
 
 export default Account;
-
-
-
-
-
-
-
-
-
-
-
-
