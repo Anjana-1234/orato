@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logo.png";
@@ -10,7 +10,17 @@ const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [cooldown, setCooldown] = useState(0); // Cooldown timer
+  const [otpSent, setOtpSent] = useState(false); // Track if OTP was sent
   const navigate = useNavigate();
+
+  // Countdown timer
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,11 +32,8 @@ const ForgotPassword = () => {
       const res = await axios.post(`${API}/forgot-password-otp`, { email });
       
       setMessage(res.data.message || "OTP sent to your email!");
-      
-      // Wait 1.5 seconds, then navigate to reset password page with email
-      setTimeout(() => {
-        navigate(`/reset-password?email=${encodeURIComponent(email)}`);
-      }, 1500);
+      setOtpSent(true);
+      setCooldown(60); // 60 second cooldown before allowing resend
       
     } catch (error: any) {
       console.error("Forgot password error:", error);
@@ -38,6 +45,10 @@ const ForgotPassword = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleProceed = () => {
+    navigate(`/reset-password?email=${encodeURIComponent(email)}`);
   };
 
   return (
@@ -54,20 +65,38 @@ const ForgotPassword = () => {
           Forgot Password?
         </h2>
         <p className="text-center text-gray-500 mb-6">
-          Enter your email to receive an OTP code
+          Enter your email to receive a 6-digit OTP code
         </p>
 
         {/* Success Message */}
         {message && (
-          <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg">
-            {message}
+          <div className="mb-4 p-4 bg-green-100 border-2 border-green-400 rounded-lg">
+            <div className="flex items-start gap-3">
+              <div className="text-green-600 text-2xl">✅</div>
+              <div className="flex-1">
+                <p className="font-semibold text-green-800">{message}</p>
+                <p className="text-sm text-green-700 mt-1">
+                  Please check your email and enter the OTP code.
+                </p>
+                {cooldown > 0 && (
+                  <p className="text-xs text-green-600 mt-2">
+                    You can request a new OTP in {cooldown} seconds
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-            {error}
+          <div className="mb-4 p-4 bg-red-100 border-2 border-red-400 rounded-lg">
+            <div className="flex items-start gap-3">
+              <div className="text-red-600 text-2xl">❌</div>
+              <div className="flex-1">
+                <p className="font-semibold text-red-800">{error}</p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -83,23 +112,47 @@ const ForgotPassword = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              disabled={loading || cooldown > 0}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || cooldown > 0}
             className={`w-full py-3 rounded-lg text-white font-semibold 
                        bg-gradient-to-r from-green-500 to-emerald-600 
                        hover:from-green-600 hover:to-emerald-700
                        transition-all duration-200 shadow-md hover:shadow-lg
-                       ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                       ${(loading || cooldown > 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            {loading ? "Sending OTP..." : "Send OTP"}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                </svg>
+                Sending OTP...
+              </span>
+            ) : cooldown > 0 ? (
+              `Resend in ${cooldown}s`
+            ) : otpSent ? (
+              "Resend OTP"
+            ) : (
+              "Send OTP"
+            )}
           </button>
         </form>
+
+        {/* Proceed Button - Show after OTP sent */}
+        {otpSent && (
+          <button
+            onClick={handleProceed}
+            className="w-full mt-4 py-3 rounded-lg text-green-600 font-semibold border-2 border-green-600 hover:bg-green-50 transition-all duration-200"
+          >
+            I have received the OTP →
+          </button>
+        )}
 
         {/* Back to Sign In */}
         <div className="mt-6 text-center">
