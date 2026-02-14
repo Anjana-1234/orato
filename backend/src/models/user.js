@@ -1,10 +1,57 @@
 import mongoose from "mongoose";
 
-// THIS DEFINES WHAT DATA IS STORED FOR EACH USER
 const userSchema = new mongoose.Schema({
-  fullName: { type: String, required: true },  // User's name
-  email: { type: String, required: true, unique: true },  // Email (must be unique)
-  password: { type: String, required: true }  // Hashed password
-}, { timestamps: true }); // Adds createdAt and updatedAt automatically
+  fullName: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  
+  // NEW FIELDS - Personal Information
+  age: Number,
+  nativeLanguage: String,
+  targetLanguage: {
+    type: String,
+    default: "English",
+  },
+  learningGoal: String,
+  dailyGoalMinutes: {
+    type: Number,
+    default: 15,
+  },
+  
+  // NEW FIELDS - Assessment
+  skillLevel: {
+    type: String,
+    enum: ['beginner', 'intermediate', 'advanced'],
+    default: 'beginner',
+  },
+  assessmentScore: {
+    type: Number,
+    default: 0,
+  },
+  assessmentCompleted: {
+    type: Boolean,
+    default: false,
+  },
+  
+  // Password Reset (already exists)
+  resetPasswordToken: String,
+  resetPasswordExpire: Date,
+  
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-export default mongoose.model("user", userSchema);
+export default mongoose.model("User", userSchema);

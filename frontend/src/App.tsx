@@ -10,6 +10,8 @@ import Account from './pages/Account';
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import PersonalInfo from "./pages/PersonalInfo";  
+import Assessment from "./pages/Assessment";
+import AssessmentResults from "./pages/AssessmentResults";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -26,6 +28,8 @@ function App() {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/personal-info" element={<PersonalInfo />} />  
+          <Route path="/assessment" element={<Assessment />} />  
+          <Route path="/assessment-results" element={<AssessmentResults />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           

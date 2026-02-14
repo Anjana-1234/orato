@@ -10,15 +10,28 @@ import { sendOtpEmail } from "../services/emailService.js";
  */
 export const signup = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { 
+      fullName, 
+      email, 
+      password,
+      // NEW: Accept additional fields
+      age,
+      nativeLanguage,
+      targetLanguage,
+      learningGoal,
+      dailyGoalMinutes,
+      skillLevel,
+      assessmentScore,
+      assessmentCompleted,
+    } = req.body;
 
-    console.log("Signup request:", { fullName, email });
+    console.log("Signup request:", { fullName, email, skillLevel });
 
     // Validate input
     if (!fullName || !email || !password) {
       return res.status(400).json({ 
         success: false,
-        message: "All fields are required!" 
+        message: "Name, email, and password are required!" 
       });
     }
 
@@ -42,18 +55,27 @@ export const signup = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+    // Create new user with ALL data
     const newUser = new User({
       fullName,
       email: email.toLowerCase(),
       password: hashedPassword,
+      // NEW: Save all collected data
+      age,
+      nativeLanguage,
+      targetLanguage,
+      learningGoal,
+      dailyGoalMinutes,
+      skillLevel,
+      assessmentScore,
+      assessmentCompleted,
     });
 
     await newUser.save();
 
-    console.log("User created successfully:", newUser.email);
+    console.log("✅ User created:", newUser.email, "| Level:", skillLevel);
 
-    // Generate JWT token (for auto-login)
+    // Generate JWT token
     const token = jwt.sign(
       { 
         userId: newUser._id, 
@@ -72,6 +94,8 @@ export const signup = async (req, res) => {
         id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
+        skillLevel: newUser.skillLevel,
+        dailyGoalMinutes: newUser.dailyGoalMinutes,
       },
     });
 
