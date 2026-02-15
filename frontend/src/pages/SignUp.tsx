@@ -1,21 +1,20 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 
-// Backend API base URL
-const API = "http://localhost:5001/api/auth";
-
 const SignUp = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // If coming back from personal-info, restore previous data
+  const previousData = location.state || {};
+  
+  const [fullName, setFullName] = useState(previousData.fullName || "");
+  const [email, setEmail] = useState(previousData.email || "");
+  const [password, setPassword] = useState(previousData.password || "");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validation: Check if passwords match
@@ -30,50 +29,39 @@ const SignUp = () => {
       return;
     }
 
-    setLoading(true);
+    // Collect Step 1 data
+    const userData = {
+      fullName,
+      email,
+      password,
+    };
 
-    try {
-      const res = await axios.post(`${API}/signup`, {
-        fullName,
-        email,
-        password,
-      });
+    console.log("Step 1 data collected:", userData);
 
-      alert(res.data.message || "Account created successfully!");
-      
-      // ✅ OPTION 1: Go to signin page (current)
-      // navigate("/signin");
-      
-      // ✅ OPTION 2: Auto-login and go to dashboard
-      // If your backend returns token on signup, use this:
-      if (res.data.token) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        navigate("/dashboard");
-      } else {
-        navigate("/signin");
-      }
-      
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      
-      if (error.response) {
-        alert(error.response.data.message || "Signup failed!");
-      } else if (error.request) {
-        alert("Cannot connect to server. Please check if backend is running.");
-      } else {
-        alert("Signup failed. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
+    // Navigate to Step 2: Personal Information
+    navigate("/personal-info", { state: userData });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-8">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         
-        {/* Logo Section */}
+        {/* Progress Bar */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-gray-600">Progress</span>
+            <span className="text-sm font-medium text-green-600">30%</span>
+          </div>
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-green-600 h-2 rounded-full transition-all duration-300" style={{ width: '30%' }}></div>
+          </div>
+          <div className="flex justify-between mt-2">
+            <span className="text-xs text-gray-500">Step 1 of 3</span>
+            <span className="text-xs text-green-600 font-semibold">Account Information</span>
+          </div>
+        </div>
+
+        {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
             src={logo}
@@ -82,8 +70,8 @@ const SignUp = () => {
           />
         </div>
 
-        {/* Title Section */}
-        <h2 className="text-3xl font-bold text-center text-gray-800">
+        {/* Title */}
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
           Create Account
         </h2>
         <p className="text-center text-gray-500 mb-6">
@@ -93,10 +81,10 @@ const SignUp = () => {
         {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          {/* Full Name Input */}
+          {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
+              Full Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -105,14 +93,13 @@ const SignUp = () => {
               onChange={(e) => setFullName(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
-              disabled={loading}
             />
           </div>
 
-          {/* Email Input */}
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
+              Email Address <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -121,14 +108,13 @@ const SignUp = () => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
-              disabled={loading}
             />
           </div>
 
-          {/* Password Input */}
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+              Password <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -138,14 +124,13 @@ const SignUp = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
               minLength={6}
-              disabled={loading}
             />
           </div>
 
-          {/* Confirm Password Input */}
+          {/* Confirm Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
+              Confirm Password <span className="text-red-500">*</span>
             </label>
             <input
               type="password"
@@ -154,35 +139,19 @@ const SignUp = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               required
-              disabled={loading}
             />
           </div>
 
-          {/* Submit Button - GREEN THEME */}
+          {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
-            className={`w-full py-3 rounded-lg text-white font-semibold
-                       bg-gradient-to-r from-green-500 to-emerald-600
-                       hover:from-green-600 hover:to-emerald-700
-                       transition-all duration-200 shadow-md hover:shadow-lg
-                       ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className="w-full py-3 rounded-lg text-white font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-md hover:shadow-lg"
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
-                </svg>
-                Creating Account...
-              </span>
-            ) : (
-              "Create Account"
-            )}
+            Next: Personal Info →
           </button>
         </form>
 
-        {/* Footer - Link to Signin - GREEN THEME */}
+        {/* Footer */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{" "}

@@ -107,7 +107,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn = false }) => {
             ) : (
               <Link
                 to="/signin"
-                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition"
+                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-semibold transition"
               >
                 Login
               </Link>

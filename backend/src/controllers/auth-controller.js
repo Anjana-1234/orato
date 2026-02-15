@@ -2,7 +2,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { sendOtpEmail } from "../services/emailService.js";  // ← Add this
+import { sendOtpEmail } from "../services/emailService.js";
 
 /**
  * SIGNUP - Register new user
@@ -10,15 +10,28 @@ import { sendOtpEmail } from "../services/emailService.js";  // ← Add this
  */
 export const signup = async (req, res) => {
   try {
-    const { fullName, email, password } = req.body;
+    const { 
+      fullName, 
+      email, 
+      password,
+      // NEW: Accept additional fields
+      age,
+      nativeLanguage,
+      targetLanguage,
+      learningGoal,
+      dailyGoalMinutes,
+      skillLevel,
+      assessmentScore,
+      assessmentCompleted,
+    } = req.body;
 
-    console.log("Signup request:", { fullName, email });
+    console.log("Signup request:", { fullName, email, skillLevel });
 
     // Validate input
     if (!fullName || !email || !password) {
       return res.status(400).json({ 
         success: false,
-        message: "All fields are required!" 
+        message: "Name, email, and password are required!" 
       });
     }
 
@@ -42,18 +55,27 @@ export const signup = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new user
+    // Create new user with ALL data
     const newUser = new User({
       fullName,
       email: email.toLowerCase(),
       password: hashedPassword,
+      // NEW: Save all collected data
+      age,
+      nativeLanguage,
+      targetLanguage,
+      learningGoal,
+      dailyGoalMinutes,
+      skillLevel,
+      assessmentScore,
+      assessmentCompleted,
     });
 
     await newUser.save();
 
-    console.log("User created successfully:", newUser.email);
+    console.log("✅ User created:", newUser.email, "| Level:", skillLevel);
 
-    // Generate JWT token (for auto-login)
+    // Generate JWT token
     const token = jwt.sign(
       { 
         userId: newUser._id, 
@@ -72,6 +94,8 @@ export const signup = async (req, res) => {
         id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
+        skillLevel: newUser.skillLevel,
+        dailyGoalMinutes: newUser.dailyGoalMinutes,
       },
     });
 
@@ -159,7 +183,10 @@ export const forgotPasswordOtp = async (req, res) => {
   try {
     const { email } = req.body;
 
-    console.log("Forgot password OTP request for:", email);
+    console.log("\n========================================");
+    console.log("=== SEND OTP REQUEST ===");
+    console.log("========================================");
+    console.log("📧 Email:", email);
 
     // Validate email
     if (!email) {
@@ -173,33 +200,37 @@ export const forgotPasswordOtp = async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!user) {
-      console.log("User not found with email:", email);
+      console.log("❌ User not found with email:", email);
       return res.status(404).json({
         success: false,
         message: "No account found with this email address!",
       });
     }
 
-    console.log("User found:", user.email);
+    console.log("✅ User found:", user.email);
 
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log("🔑 Generated OTP:", otp);
 
     // Hash OTP before saving to database
     const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
+    console.log("🔐 Hashed OTP:", otpHash);
 
     // Save hashed OTP and expiry to user (10 minutes)
     user.resetPasswordToken = otpHash;
     user.resetPasswordExpire = Date.now() + 600000; // 10 minutes
     await user.save();
 
-    console.log("OTP generated for:", user.email);
+    console.log("💾 OTP saved to database");
+    console.log("⏰ Expiry time:", new Date(user.resetPasswordExpire).toLocaleString());
 
     // Send OTP email
     try {
       await sendOtpEmail(user.email, otp);
       
-      console.log("✅ OTP email sent successfully");
+      console.log("✅ OTP EMAIL SENT SUCCESSFULLY");
+      console.log("========================================\n");
 
       res.status(200).json({
         success: true,
@@ -212,7 +243,7 @@ export const forgotPasswordOtp = async (req, res) => {
       user.resetPasswordExpire = undefined;
       await user.save();
 
-      console.error("Failed to send OTP email:", emailError);
+      console.error("❌ Failed to send OTP email:", emailError);
 
       return res.status(500).json({
         success: false,
@@ -221,7 +252,7 @@ export const forgotPasswordOtp = async (req, res) => {
     }
 
   } catch (error) {
-    console.error("Forgot password OTP error:", error);
+    console.error("❌ Forgot password OTP error:", error);
     res.status(500).json({
       success: false,
       message: "Server error. Please try again.",
@@ -231,15 +262,24 @@ export const forgotPasswordOtp = async (req, res) => {
 
 /**
  * RESET PASSWORD WITH OTP - Verify OTP and reset password
+ * ✅ FIXED VERSION - Separated query and validation
  */
 export const resetPasswordOtp = async (req, res) => {
   try {
     const { email, otp, newPassword } = req.body;
 
-    console.log("Reset password OTP request for:", email);
+    console.log("\n========================================");
+    console.log("=== RESET PASSWORD OTP REQUEST ===");
+    console.log("========================================");
+    console.log("📧 Email received:", email);
+    console.log("🔑 OTP received:", otp);
+    console.log("🔑 OTP type:", typeof otp);
+    console.log("🔑 OTP length:", otp.length);
+    console.log("⏰ Current time:", new Date().toLocaleString());
 
     // Validate input
     if (!email || !otp || !newPassword) {
+      console.log("❌ Missing required fields");
       return res.status(400).json({
         success: false,
         message: "Email, OTP, and new password are required!",
@@ -248,6 +288,7 @@ export const resetPasswordOtp = async (req, res) => {
 
     // Validate OTP length
     if (otp.length !== 6) {
+      console.log("❌ Invalid OTP length:", otp.length);
       return res.status(400).json({
         success: false,
         message: "OTP must be 6 digits!",
@@ -256,30 +297,62 @@ export const resetPasswordOtp = async (req, res) => {
 
     // Validate password length
     if (newPassword.length < 6) {
+      console.log("❌ Password too short");
       return res.status(400).json({
         success: false,
         message: "Password must be at least 6 characters!",
       });
     }
 
-    // Hash the OTP to compare with database
-    const otpHash = crypto.createHash("sha256").update(otp).digest("hex");
-
-    // Find user with valid OTP
+    // ✅ FIX: Find user by email FIRST (don't check OTP in query)
     const user = await User.findOne({
       email: email.toLowerCase().trim(),
-      resetPasswordToken: otpHash,
-      resetPasswordExpire: { $gt: Date.now() }, // OTP not expired
     });
 
     if (!user) {
-      return res.status(400).json({
+      console.log("❌ User not found");
+      return res.status(404).json({
         success: false,
-        message: "Invalid or expired OTP!",
+        message: "User not found!",
       });
     }
 
-    console.log("Valid OTP found for user:", user.email);
+    console.log("✅ User found:", user.email);
+    console.log("🔐 Stored OTP hash in DB:", user.resetPasswordToken);
+    console.log("⏰ Stored expiry time:", user.resetPasswordExpire ? new Date(user.resetPasswordExpire).toLocaleString() : "Not set");
+
+    // ✅ FIX: Hash the OTP and compare AFTER finding user
+    const otpHash = crypto.createHash("sha256").update(otp.toString().trim()).digest("hex");
+    console.log("🔐 Hashed OTP from user input:", otpHash);
+
+    console.log("\n--- OTP COMPARISON ---");
+    console.log("Expected (DB)  :", user.resetPasswordToken);
+    console.log("Received (User):", otpHash);
+    console.log("Match?", user.resetPasswordToken === otpHash ? "YES ✅" : "NO ❌");
+
+    // ✅ FIX: Check if OTP matches
+    if (user.resetPasswordToken !== otpHash) {
+      console.log("❌ OTP DOES NOT MATCH!");
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP!",
+      });
+    }
+
+    // ✅ FIX: Check if OTP expired
+    if (!user.resetPasswordExpire || Date.now() > user.resetPasswordExpire) {
+      console.log("❌ OTP HAS EXPIRED!");
+      const timeLeft = user.resetPasswordExpire - Date.now();
+      console.log("Time left:", Math.floor(timeLeft / 1000), "seconds");
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired! Please request a new one.",
+      });
+    }
+
+    const timeLeft = user.resetPasswordExpire - Date.now();
+    console.log("⏰ Time remaining:", Math.floor(timeLeft / 1000), "seconds");
+    console.log("✅ OTP IS VALID!");
 
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -290,7 +363,8 @@ export const resetPasswordOtp = async (req, res) => {
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    console.log("✅ Password reset successful for:", user.email);
+    console.log("✅ PASSWORD RESET SUCCESSFUL!");
+    console.log("========================================\n");
 
     res.status(200).json({
       success: true,
@@ -298,7 +372,7 @@ export const resetPasswordOtp = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Reset password OTP error:", error);
+    console.error("❌ Reset password OTP error:", error);
     res.status(500).json({
       success: false,
       message: "Server error. Please try again.",

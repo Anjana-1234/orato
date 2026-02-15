@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+// Page imports
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Progress from './pages/Progress';
@@ -8,6 +9,9 @@ import AboutUs from './pages/AboutUs';
 import Account from './pages/Account';
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import PersonalInfo from "./pages/PersonalInfo";  
+import Assessment from "./pages/Assessment";
+import AssessmentResults from "./pages/AssessmentResults";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -18,11 +22,16 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<AboutUs />} />
+          
+          {/* Authentication Routes */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />  {/* ← ADD THIS */}
-          <Route path="/reset-password" element={<ResetPassword />} />    {/* ← ADD THIS */}
-          <Route path="/about" element={<AboutUs />} />
+          <Route path="/personal-info" element={<PersonalInfo />} />  
+          <Route path="/assessment" element={<Assessment />} />  
+          <Route path="/assessment-results" element={<AssessmentResults />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           
           {/* Protected Routes - After Login */}
           <Route path="/dashboard" element={<Dashboard />} />
@@ -32,9 +41,18 @@ function App() {
 
           {/* 404 Not Found */}
           <Route path="*" element={
-            <div className="flex flex-col items-center justify-center min-h-screen">
-              <h1 className="text-4xl font-bold mb-4">404 - Page Not Found</h1>
-              <a href="/" className="text-green-600 hover:underline font-semibold">Go to Home</a>
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+              <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
+                <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
+                <h2 className="text-2xl font-semibold text-gray-600 mb-4">Page Not Found</h2>
+                <p className="text-gray-500 mb-6">The page you're looking for doesn't exist.</p>
+                <a 
+                  href="/" 
+                  className="inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg no-underline"
+                >
+                  Go to Home
+                </a>
+              </div>
             </div>
           } />
         </Routes>
