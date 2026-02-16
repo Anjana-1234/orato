@@ -85,18 +85,23 @@ const EditProfileModal: React.FC<Props> = ({ onClose }) => {
                         <label className="text-sm text-gray-600">Bio</label>
                         <textarea
                             rows={3}
-                            className="w-full mt-1 border rounded-lg px-3 py-2"
-                        />
+                            className="w-full mt-1 border rounded-lg px-3 py-2 resize-none" />
                     </div>
 
                 </div>
 
                 {/* FOOTER */}
                 <div className="flex justify-end gap-3 mt-6">
-                    <button onClick={onClose} className="border px-4 py-2 rounded-lg">
+                    <button
+                        onClick={onClose}
+                        className="border px-4 py-2 rounded-lg hover:bg-gray-100 transition"
+                    >
                         Cancel
                     </button>
-                    <button className="bg-green-600 text-white px-4 py-2 rounded-lg">
+
+                    <button
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+                    >
                         Save Changes
                     </button>
                 </div>
