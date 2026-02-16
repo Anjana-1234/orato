@@ -5,7 +5,6 @@ interface Props {
 }
 
 const EditProfileModal: React.FC<Props> = ({ onClose }) => {
-
     // Close when ESC key is pressed
     useEffect(() => {
         const handleEsc = (event: KeyboardEvent) => {
@@ -23,18 +22,24 @@ const EditProfileModal: React.FC<Props> = ({ onClose }) => {
 
     return (
         <div
-            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50"
+            className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 animate-fadeIn"
             onClick={onClose}
         >
             {/* Prevent closing when clicking inside */}
             <div
-                className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6"
+                className="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 animate-slideUp"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* HEADER */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
-                    <button onClick={onClose}>✕</button>
+
+                    <button
+                        onClick={onClose}
+                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition"
+                    >
+                        ✕
+                    </button>
                 </div>
 
                 {/* FORM */}
@@ -45,7 +50,7 @@ const EditProfileModal: React.FC<Props> = ({ onClose }) => {
                         <input
                             type="text"
                             defaultValue="John Doe"
-                            className="w-full mt-1 border rounded-lg px-3 py-2"
+                            className="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
                         />
                     </div>
 
@@ -54,13 +59,13 @@ const EditProfileModal: React.FC<Props> = ({ onClose }) => {
                         <input
                             type="email"
                             defaultValue="john.doe@example.com"
-                            className="w-full mt-1 border rounded-lg px-3 py-2"
+                            className="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none"
                         />
                     </div>
 
                     <div>
                         <label className="text-sm text-gray-600">Learning Language</label>
-                        <select className="w-full mt-1 border rounded-lg px-3 py-2">
+                        <select className="w-full mt-1 border rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:outline-none">
                             <option>English</option>
                             <option disabled>සිංහල (Coming Soon)</option>
                             <option disabled>தமிழ் (Coming Soon)</option>
@@ -85,7 +90,8 @@ const EditProfileModal: React.FC<Props> = ({ onClose }) => {
                         <label className="text-sm text-gray-600">Bio</label>
                         <textarea
                             rows={3}
-                            className="w-full mt-1 border rounded-lg px-3 py-2 resize-none" />
+                            className="w-full mt-1 border rounded-lg px-3 py-2 resize-none focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        />
                     </div>
 
                 </div>
@@ -105,7 +111,6 @@ const EditProfileModal: React.FC<Props> = ({ onClose }) => {
                         Save Changes
                     </button>
                 </div>
-
             </div>
         </div>
     );
