@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import EditProfileModal from "../components/EditProfileModal";
 
 const Account: React.FC = () => {
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar isLoggedIn={true} />
 
       <main className="max-w-6xl mx-auto px-4 py-10 space-y-8">
-
         {/* HEADER */}
         <div className="pb-3 border-b border-gray-200">
           <h1 className="text-4xl font-bold tracking-tight text-gray-800">
@@ -21,15 +23,12 @@ const Account: React.FC = () => {
 
         {/* PROFILE CARD */}
         <section className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition duration-300">
-
           <div className="flex flex-wrap justify-between items-start gap-4 mb-6">
-
             <div className="flex items-center gap-4">
               <div className="relative">
                 <div className="w-20 h-20 rounded-full bg-green-500 flex items-center justify-center text-white text-3xl font-bold shadow">
                   JD
                 </div>
-
                 <div className="absolute -bottom-1 -right-1 bg-white border rounded-full w-7 h-7 flex items-center justify-center text-xs shadow">
                   📷
                 </div>
@@ -41,7 +40,11 @@ const Account: React.FC = () => {
               </div>
             </div>
 
-            <button className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition font-medium">
+            {/* EDIT BUTTON */}
+            <button
+              onClick={() => setIsEditOpen(true)}
+              className="border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-100 transition font-medium"
+            >
               Edit Profile
             </button>
           </div>
@@ -109,7 +112,9 @@ const Account: React.FC = () => {
 
           {/* LANGUAGES */}
           <div className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition duration-300">
-            <h3 className="text-2xl font-bold mb-4 text-gray-800">Languages</h3>
+            <h3 className="text-2xl font-bold mb-4 text-gray-800">
+              Languages
+            </h3>
 
             <div className="border rounded-xl p-4 space-y-3 bg-white hover:shadow-sm transition">
               <div>
@@ -121,9 +126,22 @@ const Account: React.FC = () => {
                 <div className="bg-blue-500 h-2 rounded-full w-[75%]" />
               </div>
 
-              <button className="w-full border rounded-lg py-2 hover:bg-gray-50 transition font-medium">
-                + Add Language
-              </button>
+              <div className="relative group w-full">
+                <button
+                  className="w-full border rounded-lg py-2 hover:bg-gray-50 transition font-medium cursor-not-allowed"
+                  disabled
+                >
+                  + Add Language
+                </button>
+
+                {/* Tooltip */}
+                <div className="absolute -top-8 left-1/2 -translate-x-1/2 
+                  bg-gray-800 text-white text-xs px-2 py-1 
+                  rounded opacity-0 group-hover:opacity-100 
+                  transition pointer-events-none">
+                  Coming soon
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -155,10 +173,14 @@ const Account: React.FC = () => {
             ))}
           </div>
         </section>
-
       </main>
 
       <Footer />
+
+      {/* MODAL */}
+      {isEditOpen && (
+        <EditProfileModal onClose={() => setIsEditOpen(false)} />
+      )}
     </div>
   );
 };
