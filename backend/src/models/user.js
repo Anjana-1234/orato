@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 
+const goalSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  targetDate: {
+    type: Date,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String,
@@ -15,39 +30,42 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  
-  // NEW FIELDS - Personal Information
-  age: Number,
-  nativeLanguage: String,
+
+  // Profile Info
+  bio: {
+    type: String,
+    default: "",
+  },
+
   targetLanguage: {
     type: String,
     default: "English",
   },
-  learningGoal: String,
-  dailyGoalMinutes: {
-    type: Number,
-    default: 15,
-  },
-  
-  // NEW FIELDS - Assessment
+
+  // Goals
+  goals: [goalSchema],
+
+  // Assessment
   skillLevel: {
     type: String,
-    enum: ['beginner', 'intermediate', 'advanced'],
-    default: 'beginner',
+    enum: ["beginner", "intermediate", "advanced"],
+    default: "beginner",
   },
+
   assessmentScore: {
     type: Number,
     default: 0,
   },
+
   assessmentCompleted: {
     type: Boolean,
     default: false,
   },
-  
-  // Password Reset (already exists)
+
+  // Password Reset
   resetPasswordToken: String,
   resetPasswordExpire: Date,
-  
+
   createdAt: {
     type: Date,
     default: Date.now,

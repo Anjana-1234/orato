@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import API from "../services/api";
 import logo from "../assets/logo.png";
-
-const API = "http://localhost:5001/api/auth";
 
 const AssessmentResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Get all user data including assessment results
   const userData = location.state || {};
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -84,7 +82,7 @@ const AssessmentResults = () => {
       });
 
       // Create account with all collected data
-      const res = await axios.post(`${API}/signup`, {
+      const res = await API.post("/auth/signup", {
         fullName,
         email,
         password,
@@ -116,13 +114,13 @@ const AssessmentResults = () => {
 
     } catch (error: any) {
       console.error("❌ Account creation error:", error);
-      
+
       if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else {
         setError("Failed to create account. Please try again.");
       }
-      
+
       setLoading(false);
     }
   };
@@ -130,7 +128,7 @@ const AssessmentResults = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 px-4 py-8 flex items-center justify-center">
       <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8">
-        
+
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img src={logo} alt="Orato Logo" className="w-20 h-20 rounded-xl shadow-md" />
@@ -156,13 +154,12 @@ const AssessmentResults = () => {
             <div className="text-lg text-gray-700 mb-4">
               {percentage}% Correct
             </div>
-            
+
             {/* Skill Level Badge */}
-            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-lg font-semibold ${
-              skillInfo.color === 'green' ? 'bg-green-100 text-green-700 border-2 border-green-300' :
+            <div className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-lg font-semibold ${skillInfo.color === 'green' ? 'bg-green-100 text-green-700 border-2 border-green-300' :
               skillInfo.color === 'yellow' ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-300' :
-              'bg-red-100 text-red-700 border-2 border-red-300'
-            }`}>
+                'bg-red-100 text-red-700 border-2 border-red-300'
+              }`}>
               <span className="text-2xl">{skillInfo.emoji}</span>
               <span>{skillInfo.title} Level</span>
             </div>
@@ -212,17 +209,16 @@ const AssessmentResults = () => {
         <button
           onClick={handleCreateAccount}
           disabled={loading}
-          className={`w-full py-4 rounded-lg text-white font-bold text-lg transition-all shadow-lg hover:shadow-xl ${
-            loading
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
-          }`}
+          className={`w-full py-4 rounded-lg text-white font-bold text-lg transition-all shadow-lg hover:shadow-xl ${loading
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
+            }`}
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
               </svg>
               Creating Your Account...
             </span>

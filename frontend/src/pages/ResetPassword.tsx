@@ -1,25 +1,22 @@
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import API from "../services/api";
 import logo from "../assets/logo.png";
-
-const API = "http://localhost:5001/api/auth";
 
 const ResetPassword = () => {
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Get email from URL (e.g., /reset-password?email=user@example.com)
   const email = searchParams.get("email");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (!otp || otp.length !== 6) {
       alert("Please enter a valid 6-digit OTP!");
       return;
@@ -43,7 +40,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post(`${API}/reset-password-otp`, {
+      const res = await API.post("/auth/reset-password-otp", {
         email,
         otp,
         newPassword: password,
@@ -51,9 +48,10 @@ const ResetPassword = () => {
 
       alert(res.data.message || "Password reset successful!");
       navigate("/signin");
-      
+
     } catch (error: any) {
       console.error("Reset password error:", error);
+
       if (error.response) {
         alert(error.response.data.message || "Failed to reset password!");
       } else {
@@ -67,95 +65,86 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        
-        {/* Logo */}
+
         <div className="flex justify-center mb-6">
-          <img src={logo} alt="Orato Logo" className="w-20 h-20 rounded-xl shadow-md" />
+          <img
+            src={logo}
+            alt="Orato Logo"
+            className="w-20 h-20 rounded-xl shadow-md"
+          />
         </div>
 
-        {/* Title */}
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">
           Reset Password
         </h2>
+
         <p className="text-center text-gray-500 mb-6">
           Enter the OTP sent to {email || "your email"}
         </p>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          
-          {/* OTP Input */}
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               OTP Code
             </label>
             <input
               type="text"
-              placeholder="Enter 6-digit OTP"
               value={otp}
-              onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+              onChange={(e) =>
+                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+              }
               required
               maxLength={6}
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-center text-2xl font-mono tracking-widest"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg text-center text-2xl font-mono tracking-widest"
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Check your email for the 6-digit code (valid for 10 minutes)
-            </p>
           </div>
 
-          {/* New Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               New Password
             </label>
             <input
               type="password"
-              placeholder="Minimum 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
             />
           </div>
 
-          {/* Confirm Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Confirm New Password
             </label>
             <input
               type="password"
-              placeholder="Re-enter your password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               disabled={loading}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg"
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
             className={`w-full py-3 rounded-lg text-white font-semibold 
-                       bg-gradient-to-r from-green-500 to-emerald-600 
-                       hover:from-green-600 hover:to-emerald-700
-                       transition-all duration-200 shadow-md hover:shadow-lg
-                       ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                       bg-gradient-to-r from-green-500 to-emerald-600
+                       ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
           >
             {loading ? "Resetting Password..." : "Reset Password"}
           </button>
         </form>
 
-        {/* Back to Sign In */}
         <div className="mt-6 text-center">
           <Link
             to="/signin"
-            className="text-sm text-green-600 hover:text-green-700 hover:underline font-medium"
+            className="text-sm text-green-600 hover:underline"
           >
             ← Back to Sign In
           </Link>
