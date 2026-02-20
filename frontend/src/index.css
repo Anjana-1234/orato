@@ -18,14 +18,8 @@
   body {
     background-color: white;
     color: #1f2937;
-    /* text-gray-800 equivalent */
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  body {
-    /* For bring all pages under one font */
     font-family: 'Poppins', sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
 }
