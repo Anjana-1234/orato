@@ -37,12 +37,19 @@ router.post(
 
       const stream = cloudinary.uploader.upload_stream(
         { folder: "profile_pictures" },
-        (error, result) => {
+        async (error, result) => {
           if (error) {
             return res.status(500).json({ message: "Upload failed" });
           }
 
-          res.json({ imageUrl: result.secure_url });
+          // 🔥 THIS IS THE NEW PART
+          req.user.profilePicture = result.secure_url;
+          await req.user.save();
+
+          res.json({
+            message: "Profile picture updated",
+            profilePicture: result.secure_url,
+          });
         }
       );
 
