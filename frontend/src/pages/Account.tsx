@@ -257,7 +257,13 @@ const Account: React.FC = () => {
                 </h2>
                 <p className="text-gray-500">{user.email}</p>
                 <p className="text-sm text-gray-400 mt-1">
-                  Joined: {new Date(user.id).toLocaleString()}
+                  Joined: {user.createdAt
+                    ? new Date(user.createdAt).toLocaleDateString("en-LK", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                    : "N/A"}
                 </p>
               </div>
             </div>
