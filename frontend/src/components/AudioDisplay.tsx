@@ -75,7 +75,7 @@ const AudioDisplay: React.FC<AudioDisplayProps> = ({
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
             {/* Header section */}
             <div className="flex items-center mb-6">
                 <div className="bg-purple-100 rounded-full p-3 mr-4">

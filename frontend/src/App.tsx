@@ -9,7 +9,7 @@ import AboutUs from './pages/AboutUs';
 import Account from './pages/Account';
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
-import PersonalInfo from "./pages/PersonalInfo";  
+import PersonalInfo from "./pages/PersonalInfo";
 import Assessment from "./pages/Assessment";
 import AssessmentResults from "./pages/AssessmentResults";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -23,16 +23,16 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<AboutUs />} />
-          
+
           {/* Authentication Routes */}
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/personal-info" element={<PersonalInfo />} />  
-          <Route path="/assessment" element={<Assessment />} />  
+          <Route path="/personal-info" element={<PersonalInfo />} />
+          <Route path="/assessment" element={<Assessment />} />
           <Route path="/assessment-results" element={<AssessmentResults />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          
+
           {/* Protected Routes - After Login */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/progress" element={<Progress />} />
@@ -46,8 +46,8 @@ function App() {
                 <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
                 <h2 className="text-2xl font-semibold text-gray-600 mb-4">Page Not Found</h2>
                 <p className="text-gray-500 mb-6">The page you're looking for doesn't exist.</p>
-                <a 
-                  href="/" 
+                <a
+                  href="/"
                   className="inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg no-underline"
                 >
                   Go to Home

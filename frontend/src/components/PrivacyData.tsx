@@ -4,7 +4,7 @@ import { Shield, Database, HelpCircle, ChevronRight, X } from 'lucide-react';
 /**
  * Manages the display and access to user data download, Privacy Policy, and Terms of Service.
  */
-const PrivacyData: React.FC = () => {
+const PrivacyData: React.FC<{ userId?: string }> = ({ userId }) => {
     // For manage visibility of privacy policy modal.
     const [showPrivacyModal, setShowPrivacyModal] = useState(false);
     // For manage visibility of terms of service modal.
@@ -14,7 +14,11 @@ const PrivacyData: React.FC = () => {
      * For handling personal data download request.
      */
     const handleDownloadData = (): void => {
-        console.log('Data download feature requested');
+        if (!userId) {
+            alert('Please log in to download your data.');
+            return;
+        }
+        window.open(`http://localhost:5001/api/settings/${userId}/download`, '_blank');
     };
 
     /**

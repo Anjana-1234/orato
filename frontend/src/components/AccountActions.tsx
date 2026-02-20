@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { LogOut, Trash2 } from 'lucide-react';
 import type { AccountActionsProps } from '../types/settings.types';
+import axios from 'axios';
 
 // For handles the logout and account delete
 const AccountActions: React.FC<AccountActionsProps> = ({ userId }) => {
@@ -12,9 +13,10 @@ const AccountActions: React.FC<AccountActionsProps> = ({ userId }) => {
     };
 
     const confirmLogout = (): void => {
-        console.log('Logging out user:', userId);
-        alert('Logged out successfully');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setShowLogoutConfirm(false);
+        window.location.href = '/signin';
     };
 
     const cancelLogout = (): void => {
@@ -25,10 +27,26 @@ const AccountActions: React.FC<AccountActionsProps> = ({ userId }) => {
         setShowDeleteConfirm(true);
     };
 
-    const confirmDelete = (): void => {
-        console.log('Deleting account for user:', userId);
-        alert('Account deletion initiated. You will receive a confirmation email.');
-        setShowDeleteConfirm(false);
+    const confirmDelete = async (): Promise<void> => {
+        const stored = localStorage.getItem('user');
+        const uid = stored ? (JSON.parse(stored).id || JSON.parse(stored)._id) : null;
+
+        if (!uid) {
+            alert('Deleting accounts is permanent.');
+            setShowDeleteConfirm(false);
+            return;
+        }
+
+        try {
+            await axios.delete(`http://localhost:5001/api/settings/${uid}`);
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setShowDeleteConfirm(false);
+            window.location.href = '/signin';
+        } catch (err) {
+            alert('Failed to delete account. Please try again.');
+            setShowDeleteConfirm(false);
+        }
     };
 
     const cancelDelete = (): void => {
