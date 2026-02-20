@@ -8,6 +8,7 @@ import userRoutes from "./routes/user-routes.js";
 import assessmentRoutes from "./routes/assessment-routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
 import { verifyEmailConfig } from "./services/emailService.js";
+import protect from "./middleware/authMiddleware.js";
 
 // Load env variables FIRST
 dotenv.config();
@@ -29,10 +30,17 @@ connectDB();
 verifyEmailConfig();
 
 // Routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/otp", otpRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/assessment", assessmentRoutes);
+app.get("/api/protected", protect, (req, res) => {
+  res.json({
+    message: "Protected route working!",
+    user: req.user,
+  });
+});
 app.use("/api/settings", settingsRoutes);
 
 // Test route

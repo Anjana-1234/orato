@@ -10,9 +10,9 @@ import { sendOtpEmail } from "../services/emailService.js";
  */
 export const signup = async (req, res) => {
   try {
-    const { 
-      fullName, 
-      email, 
+    const {
+      fullName,
+      email,
       password,
       // NEW: Accept additional fields
       age,
@@ -29,26 +29,26 @@ export const signup = async (req, res) => {
 
     // Validate input
     if (!fullName || !email || !password) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Name, email, and password are required!" 
+        message: "Name, email, and password are required!"
       });
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "User already exists with this email!" 
+        message: "User already exists with this email!"
       });
     }
 
     // Validate password length
     if (password.length < 6) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Password must be at least 6 characters!" 
+        message: "Password must be at least 6 characters!"
       });
     }
 
@@ -77,9 +77,9 @@ export const signup = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
-        userId: newUser._id, 
-        email: newUser.email 
+      {
+        userId: newUser._id,
+        email: newUser.email
       },
       process.env.JWT_SECRET || "your-default-secret-key-change-this",
       { expiresIn: "7d" }
@@ -101,9 +101,9 @@ export const signup = async (req, res) => {
 
   } catch (error) {
     console.error("Signup error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: "Server error. Please try again." 
+      message: "Server error. Please try again."
     });
   }
 };
@@ -119,27 +119,27 @@ export const signin = async (req, res) => {
 
     // Validate input
     if (!email || !password) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Email and password are required!" 
+        message: "Email and password are required!"
       });
     }
 
     // Find user by email
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
-        message: "Invalid email or password!" 
+        message: "Invalid email or password!"
       });
     }
 
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
-        message: "Invalid email or password!" 
+        message: "Invalid email or password!"
       });
     }
 
@@ -147,9 +147,9 @@ export const signin = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
-        userId: user._id, 
-        email: user.email 
+      {
+        userId: user._id,
+        email: user.email
       },
       process.env.JWT_SECRET || "your-default-secret-key-change-this",
       { expiresIn: "7d" }
@@ -164,14 +164,15 @@ export const signin = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        createdAt: user.createdAt,
       },
     });
 
   } catch (error) {
     console.error("Signin error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: "Server error. Please try again." 
+      message: "Server error. Please try again."
     });
   }
 };
@@ -228,7 +229,7 @@ export const forgotPasswordOtp = async (req, res) => {
     // Send OTP email
     try {
       await sendOtpEmail(user.email, otp);
-      
+
       console.log("✅ OTP EMAIL SENT SUCCESSFULLY");
       console.log("========================================\n");
 
