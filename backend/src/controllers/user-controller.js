@@ -97,16 +97,11 @@ export const getProfile = async (req, res) => {
   }
 };
 
-// ✅ Update logged-in user's profile
 export const updateProfile = async (req, res) => {
   try {
     const { fullName, targetLanguage, bio } = req.body;
 
-    const user = await User.findById(req.user.userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
+    const user = req.user; // <-- use existing user
 
     if (fullName) user.fullName = fullName;
     if (targetLanguage) user.targetLanguage = targetLanguage;
@@ -117,16 +112,9 @@ export const updateProfile = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        bio: user.bio,
-        targetLanguage: user.targetLanguage,
-        skillLevel: user.skillLevel,
-        createdAt: user.createdAt,
-      },
+      user,
     });
+
   } catch (error) {
     res.status(500).json({ message: "Failed to update profile" });
   }

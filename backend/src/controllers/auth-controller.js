@@ -86,7 +86,7 @@ export const signup = async (req, res) => {
     );
 
     // Return token and user info
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Account created successfully!",
       token: token,
@@ -126,13 +126,15 @@ export const signin = async (req, res) => {
     }
 
     // Find user by email
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "Invalid email or password!"
-      });
-    }
+    // Find user by email (include password explicitly)
+    const user = await User
+      .findOne({ email: email.toLowerCase() })
+      .select("+password"); if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid email or password!"
+        });
+      }
 
     // Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -155,17 +157,14 @@ export const signin = async (req, res) => {
       { expiresIn: "7d" }
     );
 
+    const { password: removedPassword, ...safeUser } = user.toObject();
+
     // Return token and user info
     res.status(200).json({
       success: true,
       message: "Login successful!",
-      token: token,
-      user: {
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        createdAt: user.createdAt,
-      },
+      token,
+      user: safeUser,
     });
 
   } catch (error) {

@@ -194,11 +194,14 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import EditProfileModal from "../components/EditProfileModal";
 import AddGoalModal from "../components/AddGoalModal";
+import API from "../services/api";
+import toast from "react-hot-toast";
 
 const Account: React.FC = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [uploading, setUploading] = useState(false); // ✅ loading state
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -206,6 +209,48 @@ const Account: React.FC = () => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  // PROFILE PICTURE UPLOAD HANDLER
+  const handleImageUpload = async (file: File) => {
+    // 1️⃣ File size validation (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB");
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await API.post(
+        "/users/upload-profile-picture",
+        formData
+      );
+
+      const updatedUser = response.data.user;
+
+      // Update state + localStorage
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+
+      toast.success("Profile picture updated successfully!");
+
+    } catch (error: any) {
+      console.error("UPLOAD ERROR:", error?.response?.data || error);
+
+      if (error?.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Image must be under 5MB");
+      }
+
+    } finally {
+      setUploading(false);
+    }
+  };
+
 
   if (!user) {
     return <div className="p-10 text-center">Loading account...</div>;
@@ -244,16 +289,44 @@ const Account: React.FC = () => {
             {/* LEFT SIDE */}
             <div className="flex items-start gap-6">
 
-              {/* Avatar */}
-              <div className="relative">
-                <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center text-white text-4xl font-semibold shadow-md">
-                  {initials}
-                </div>
+              {/* ✅ AVATAR WITH LOADING STATE */}
+              <label className="relative cursor-pointer">
 
-                <div className="absolute bottom-0 right-0 bg-white border rounded-full w-8 h-8 flex items-center justify-center text-sm shadow cursor-pointer hover:bg-gray-100 transition">
-                  📷
-                </div>
-              </div>
+                {uploading ? (
+                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center animate-pulse shadow-md">
+                    <span className="text-sm text-gray-500">Uploading...</span>
+                  </div>
+                ) : user.profilePicture ? (
+                  <img
+                    src={user.profilePicture}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover shadow-md"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center text-white text-4xl font-semibold shadow-md">
+                    {initials}
+                  </div>
+                )}
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      handleImageUpload(e.target.files[0]);
+                    }
+                  }}
+                />
+
+                {!uploading && (
+                  <div className="absolute bottom-0 right-0 bg-white border rounded-full w-8 h-8 flex items-center justify-center text-sm shadow hover:bg-gray-100 transition">
+                    📷
+                  </div>
+                )}
+
+              </label>
 
               {/* Name + Email + Joined */}
               <div className="space-y-2">
@@ -286,17 +359,15 @@ const Account: React.FC = () => {
             </button>
           </div>
 
-          {/* About */}
+          {/* Personal Overview */}
           <div
             onDoubleClick={() => setIsEditOpen(true)}
             className="mt-10 bg-gray-50 rounded-xl p-6 border border-gray-100 hover:bg-gray-100 transition"
           >
-
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
                 Personal Overview
               </h3>
-
               <span className="text-xs text-gray-400">
                 Double click to edit
               </span>
@@ -307,11 +378,11 @@ const Account: React.FC = () => {
                 {user.bio || "Double click here to add a bio."}
               </p>
             </div>
-
           </div>
 
           {/* STATS */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
             <div className="bg-gray-50 rounded-xl p-4 border">
               <p className="text-lg">🎯</p>
               <p className="text-sm text-gray-500">Current Level</p>
@@ -343,6 +414,7 @@ const Account: React.FC = () => {
                 {user.assessmentScore || 0}
               </p>
             </div>
+
           </div>
 
         </section>
@@ -354,13 +426,16 @@ const Account: React.FC = () => {
       {isEditOpen && (
         <EditProfileModal
           onClose={() => setIsEditOpen(false)}
-          onProfileUpdate={(updatedUser: any) => setUser(updatedUser)}
-        />
+          onProfileUpdate={(updatedUser: any) => {
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+          }} />
       )}
 
       {isAddGoalOpen && (
         <AddGoalModal onClose={() => setIsAddGoalOpen(false)} />
       )}
+
     </div>
   );
 };

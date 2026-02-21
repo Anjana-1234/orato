@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 import logo from "../assets/logo.png";
+import toast from "react-hot-toast";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -20,26 +21,30 @@ export default function SignIn() {
         password,
       });
 
-      // Store token and user info
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      alert("Login successful!");
+      toast.success("Login successful!");
 
-      navigate("/dashboard");
-      
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 800);
+
     } catch (error: any) {
       console.error("Signin error:", error);
 
       if (error.response) {
-        alert(error.response.data.message || "Invalid credentials!");
+        toast.error(error.response.data.message || "Invalid credentials!");
       } else {
-        alert("Cannot connect to server. Please check if backend is running.");
+        toast.error("Cannot connect to server.");
       }
+
     } finally {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-green-200 px-4">

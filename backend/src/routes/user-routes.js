@@ -1,3 +1,5 @@
+console.log("User routes file loaded");
+
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
 import {
@@ -13,17 +15,14 @@ import cloudinary from "../config/cloudinary.js";
 
 const router = express.Router();
 
+router.put("/test-profile", (req, res) => {
+  res.json({ message: "Test route works" });
+});
+
 /* ================= AUTHENTICATED USER ================= */
 
 router.get("/profile", protect, getProfile);
 router.put("/profile", protect, updateProfile);
-
-/* ================= ADMIN CRUD ================= */
-
-router.get("/", getAllUsers);
-router.get("/:id", getUserById);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
 
 router.post(
   "/upload-profile-picture",
@@ -35,20 +34,45 @@ router.post(
         return res.status(400).json({ message: "No file uploaded" });
       }
 
+      // Validate file type
+      const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+      if (!allowedTypes.includes(req.file.mimetype)) {
+        return res.status(400).json({
+          message: "Only JPG, PNG, and WEBP files are allowed",
+        });
+      }
+
+      // Delete old profile picture if exists
+      if (req.user.profilePicture) {
+        const oldPublicId = req.user.profilePicture
+          .split("/")
+          .slice(-1)[0]
+          .split(".")[0];
+
+        await cloudinary.uploader.destroy(`profile_pictures/${oldPublicId}`);
+      }
+
+      // Upload new image (with resizing)
       const stream = cloudinary.uploader.upload_stream(
-        { folder: "profile_pictures" },
+        {
+          folder: "profile_pictures",
+          transformation: [{ width: 300, height: 300, crop: "fill" }],
+        },
         async (error, result) => {
           if (error) {
-            return res.status(500).json({ message: "Upload failed" });
+            console.error("Cloudinary error:", error);
+            return res.status(500).json({ message: error.message });
           }
 
-          // 🔥 THIS IS THE NEW PART
           req.user.profilePicture = result.secure_url;
           await req.user.save();
 
+          const { password, ...safeUser } = req.user.toObject();
+
           res.json({
+            success: true,
             message: "Profile picture updated",
-            profilePicture: result.secure_url,
+            user: safeUser,
           });
         }
       );
@@ -56,9 +80,18 @@ router.post(
       stream.end(req.file.buffer);
 
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+      console.error("Upload route error:", error);
+      res.status(500).json({ message: error.message });
     }
   }
 );
+
+/* ================= ADMIN CRUD ================= */
+/* Keep parameter routes ALWAYS at bottom */
+
+router.get("/", getAllUsers);
+router.get("/:id", getUserById);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
 
 export default router;

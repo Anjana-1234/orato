@@ -14,11 +14,15 @@ import Assessment from "./pages/Assessment";
 import AssessmentResults from "./pages/AssessmentResults";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
+
     <Router>
       <div className="App">
+        <Toaster position="top-right" />
+
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Home />} />

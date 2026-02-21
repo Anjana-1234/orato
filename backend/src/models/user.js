@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    select: false, // hides password automatically
   },
 
   // Profile Info
@@ -79,4 +80,13 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("User", userSchema);
+// Clean API responses globally
+userSchema.set("toJSON", {
+  transform: (doc, ret) => {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  },
+});
+
+export default mongoose.models.User || mongoose.model("User", userSchema);
