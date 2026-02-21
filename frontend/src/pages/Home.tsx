@@ -122,6 +122,58 @@ const Home = () => {
         </div>
       </div>
 
+      {/* Features Section */}
+      <div className="bg-white py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Why Choose Orato?
+            </h2>
+            <p className="text-xl text-gray-600">
+              Experience a smarter way to learn languages
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            
+            {/* Feature 1 */}
+            <div className="bg-green-50 rounded-xl p-8">
+              <div className="text-5xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Personalized Learning
+              </h3>
+              <p className="text-gray-600">
+                AI adapts to your skill level and learning pace. Every lesson is tailored for you.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-blue-50 rounded-xl p-8">
+              <div className="text-5xl mb-4">📊</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Track Progress
+              </h3>
+              <p className="text-gray-600">
+                Visual dashboards show your improvement. Stay motivated with daily goals and streaks.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-purple-50 rounded-xl p-8">
+              <div className="text-5xl mb-4">⚡</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
+                Learn Faster
+              </h3>
+              <p className="text-gray-600">
+                Bite-sized lessons fit your schedule. Learn in just 5-15 minutes a day.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       {/* Use existing Footer component */}
       <Footer />
 
