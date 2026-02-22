@@ -87,21 +87,7 @@ const Home = () => {
               From beginner to advanced, Orato adapts to your learning journey.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex justify-center gap-4 mb-12">
-              <Link
-                to="/signup"
-                className="px-8 py-4 bg-green-600 text-white rounded-xl font-bold text-lg hover:bg-green-700 transition shadow-lg"
-              >
-                Start Free Trial
-              </Link>
-              <Link
-                to="/signin"
-                className="px-8 py-4 border-2 border-gray-400 text-gray-700 rounded-xl font-bold text-lg hover:border-green-600 hover:text-green-600 transition"
-              >
-                Sign In
-              </Link>
-            </div>
+            
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
@@ -123,110 +109,155 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="bg-white py-20">
-        <div className="max-w-7xl mx-auto px-4">
+      {/* Features Section - CREATIVE VERSION */}
+      <div className="relative bg-gradient-to-b from-white via-green-50/30 to-white py-20 overflow-hidden">
+        
+        {/* Decorative Background Elements */}
+        <div className="absolute top-20 right-0 w-72 h-72 bg-green-200/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-0 w-96 h-96 bg-emerald-200/30 rounded-full blur-3xl"></div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4">
           
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
+              Platform Features
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Why Choose Orato?
             </h2>
-            <p className="text-xl text-gray-600">
-              Experience a smarter way to learn languages
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Experience a smarter way to learn languages with cutting-edge AI technology
             </p>
           </div>
 
+          {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-8">
             
-            {/* Feature 1 */}
-            <div className="bg-green-50 rounded-xl p-8">
-              <div className="text-5xl mb-4">🎯</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Personalized Learning
-              </h3>
-              <p className="text-gray-600">
-                AI adapts to your skill level and learning pace. Every lesson is tailored for you.
-              </p>
-            </div>
+            {/* Feature 1 - Personalized Learning */}
+            <div className="group relative">
+              {/* Hover Glow */}
+              
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent group-hover:border-green-200">
+                
+                {/* Icon Container with Animation */}
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+                    <span className="text-4xl">🎯</span>
+                  </div>
+                </div>
 
-            {/* Feature 2 */}
-            <div className="bg-blue-50 rounded-xl p-8">
-              <div className="text-5xl mb-4">📊</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Track Progress
-              </h3>
-              <p className="text-gray-600">
-                Visual dashboards show your improvement. Stay motivated with daily goals and streaks.
-              </p>
-            </div>
+                {/* Content */}
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-green-600 transition-colors">
+                  Personalized Learning
+                </h3>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  AI adapts to your skill level and learning pace. Every lesson is tailored just for you.
+                </p>
 
-            {/* Feature 3 */}
-            <div className="bg-purple-50 rounded-xl p-8">
-              <div className="text-5xl mb-4">⚡</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Learn Faster
-              </h3>
-              <p className="text-gray-600">
-                Bite-sized lessons fit your schedule. Learn in just 5-15 minutes a day.
-              </p>
-            </div>
+                {/* Feature Tags */}
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full">
+                    Adaptive AI
+                  </span>
+                  <span className="px-3 py-1 bg-green-50 text-green-700 text-xs font-semibold rounded-full">
+                    Custom Path
+                  </span>
+                </div>
 
-          </div>
-        </div>
-      </div>
+                {/* Hover Arrow */}
+                <div className="mt-6 flex items-center text-green-600 font-semibold opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300">
+                  <span className="text-sm">Learn More</span>
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
 
-      {/* How It Works */}
-      <div className="bg-gradient-to-br from-green-50 to-emerald-100 py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Start in 3 Simple Steps
-            </h2>
-            <p className="text-xl text-gray-600">
-              Your learning journey begins today
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            
-            <div className="bg-white rounded-xl p-8 shadow-lg">
-              <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-xl mb-4">
-                1
               </div>
-              <div className="text-4xl mb-4">📝</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Take Assessment
-              </h3>
-              <p className="text-gray-600">
-                Answer 10 questions to determine your level. Takes less than 5 minutes.
-              </p>
             </div>
 
-            <div className="bg-white rounded-xl p-8 shadow-lg">
-              <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-xl mb-4">
-                2
+            {/* Feature 2 - Track Progress */}
+            <div className="group relative">
+              {/* Hover Glow */}
+              
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent group-hover:border-blue-200">
+                
+                {/* Icon Container with Animation */}
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+                    <span className="text-4xl">📊</span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                  Track Progress
+                </h3>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  Visual dashboards show your improvement. Stay motivated with daily goals and streaks.
+                </p>
+
+                {/* Feature Tags */}
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">
+                    Analytics
+                  </span>
+                  <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full">
+                    Streak Tracking
+                  </span>
+                </div>
+
+                {/* Hover Arrow */}
+                <div className="mt-6 flex items-center text-blue-600 font-semibold opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300">
+                  <span className="text-sm">Learn More</span>
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+
               </div>
-              <div className="text-4xl mb-4">🎯</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Get Your Plan
-              </h3>
-              <p className="text-gray-600">
-                AI creates a custom path based on your level, goals, and time.
-              </p>
             </div>
 
-            <div className="bg-white rounded-xl p-8 shadow-lg">
-              <div className="w-12 h-12 bg-green-600 text-white rounded-full flex items-center justify-center font-bold text-xl mb-4">
-                3
+            {/* Feature 3 - Learn Faster */}
+            <div className="group relative">
+              {/* Hover Glow */}
+              
+              <div className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent group-hover:border-purple-200">
+                
+                {/* Icon Container with Animation */}
+                <div className="mb-6">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg">
+                    <span className="text-4xl">⚡</span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                  Learn Faster
+                </h3>
+                <p className="text-gray-600 leading-relaxed mb-4">
+                  Bite-sized lessons fit your schedule. Learn in just 5-15 minutes a day.
+                </p>
+
+                {/* Feature Tags */}
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-full">
+                    Micro-lessons
+                  </span>
+                  <span className="px-3 py-1 bg-purple-50 text-purple-700 text-xs font-semibold rounded-full">
+                    Flexible
+                  </span>
+                </div>
+
+                {/* Hover Arrow */}
+                <div className="mt-6 flex items-center text-purple-600 font-semibold opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-2 transition-all duration-300">
+                  <span className="text-sm">Learn More</span>
+                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+
               </div>
-              <div className="text-4xl mb-4">🚀</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                Start Learning
-              </h3>
-              <p className="text-gray-600">
-                Begin with bite-sized lessons. Track your progress daily.
-              </p>
             </div>
 
           </div>
