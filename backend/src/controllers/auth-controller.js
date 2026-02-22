@@ -14,7 +14,7 @@ export const signup = async (req, res) => {
       fullName,
       email,
       password,
-      // NEW: Accept additional fields
+      //  Accept additional fields
       age,
       nativeLanguage,
       targetLanguage,
@@ -60,7 +60,7 @@ export const signup = async (req, res) => {
       fullName,
       email: email.toLowerCase(),
       password: hashedPassword,
-      // NEW: Save all collected data
+      // Save all collected data
       age,
       nativeLanguage,
       targetLanguage,
