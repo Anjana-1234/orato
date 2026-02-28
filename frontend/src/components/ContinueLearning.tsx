@@ -18,7 +18,7 @@ const lessons: Lesson[] = [
     timeLeft: '15 min left',
     progress: 75,
     icon: '📚',
-    iconBg: 'bg-green-100',
+    iconBg: 'bg-green-200',
   },
   {
     id: 2,
@@ -144,7 +144,7 @@ export default function ContinueLearning() {
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
                         ref={(el) => { progressRefs.current[index] = el; }}
-                        className="h-full bg-orato-green rounded-full relative overflow-hidden"
+                        className="h-full bg-green-300 rounded-full relative overflow-hidden"
                         style={{ width: '0%' }}
                       >
                         {/* Animated stripe pattern */}
