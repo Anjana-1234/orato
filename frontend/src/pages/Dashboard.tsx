@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { gsap } from "gsap";
@@ -10,12 +11,18 @@ import ContinueLearning from "../components/ContinueLearning";
 import DailyChallenges from "../components/DailyChallenges";
 import SkillProgress from "../components/SkillProgress";
 import RecentAchievements from "../components/RecentAchievements";
-
 import SpeakingCoach from "../components/SpeakingCoach";
 
 const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const mainRef = useRef<HTMLElement>(null);
+  const navigate = useNavigate();
+
+  const handleLessonClick = (_lessonId: number, lessonTitle: string) => {
+    if (lessonTitle === 'Visual Vocabulary Cards') {
+      navigate('/visual-cards');
+    }
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 500);
@@ -56,7 +63,7 @@ const Dashboard: React.FC = () => {
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div className="xl:col-span-2 space-y-6">
-              <ContinueLearning />
+              <ContinueLearning onLessonClick={handleLessonClick} />
               <DailyChallenges />
 
               {/* ✅ Speaking Coach Feature */}
