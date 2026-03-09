@@ -9,11 +9,21 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn: propIsLoggedIn }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userAvatar, setUserAvatar] = useState("");
 
   // Check login status from localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+
     setIsLoggedIn(!!token || propIsLoggedIn || false);
+
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUserName(parsedUser.name || "User");
+      setUserAvatar(parsedUser.profilePicture || "");
+    }
   }, [propIsLoggedIn]);
 
   const toggleMobileMenu = () => {
@@ -103,24 +113,23 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn: propIsLoggedIn }) => {
                 <NavLink
                   to="/account"
                   className={({ isActive }) =>
-                    `flex items-center gap-2 py-2 px-4 rounded-lg transition-all duration-200 no-underline
-                     hover:bg-green-100 hover:scale-105 hover:shadow-md
-                     ${isActive ? "text-green-600 font-semibold bg-green-50" : "text-gray-700"}`
+                    `flex items-center gap-3 py-2 px-4 rounded-full transition-all duration-300 no-underline
+       hover:bg-green-100 hover:scale-105 hover:shadow-md
+       ${isActive ? "text-green-600 font-semibold bg-green-50" : "text-gray-700"}`
                   }
                   onClick={closeMobileMenu}
                 >
-                  <svg
-                    width="20"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                    <circle cx="12" cy="7" r="4" />
-                  </svg>
-                  <span className="font-medium hidden md:inline">Account</span>
+                  {/* Profile Image */}
+                  <img
+                    src={userAvatar || "/default-avatar.png"}
+                    alt="profile"
+                    className="w-10 h-10 rounded-full object-cover border-2 border-green-500 transition-transform duration-300 hover:scale-110"
+                  />
+
+                  {/* User Name */}
+                  <span className="font-semibold hidden md:inline">
+                    {userName}
+                  </span>
                 </NavLink>
               ) : (
                 <Link
