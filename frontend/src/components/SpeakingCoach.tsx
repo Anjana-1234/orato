@@ -224,8 +224,8 @@ function SpeakingCoach() {
       )}
 
       {loading && (
-        <div className="mt-3 text-sm text-blue-600 font-medium">
-          Coach is thinking...
+        <div className="mt-3 text-sm text-blue-600 font-medium flex items-center gap-2">
+          <span className="animate-pulse">💭 Coach is thinking...</span>
         </div>
       )}
 
