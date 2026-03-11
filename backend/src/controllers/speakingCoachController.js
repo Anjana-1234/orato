@@ -4,6 +4,9 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const COACH_SYSTEM_PROMPT =
+  "You are a friendly English speaking coach. Correct grammar briefly, explain simply, and ask one short follow-up question. Keep replies short and clear for learners.";
+
 export const chatWithSpeakingCoach = async (req, res) => {
   try {
     const { message } = req.body;
@@ -21,8 +24,7 @@ export const chatWithSpeakingCoach = async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            "You are a friendly English speaking coach. Correct grammar briefly, explain simply, and ask one short follow-up question. Keep replies short and clear for learners.",
+          content: COACH_SYSTEM_PROMPT,
         },
         {
           role: "user",
