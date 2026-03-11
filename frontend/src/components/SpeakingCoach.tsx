@@ -66,10 +66,17 @@ function SpeakingCoach() {
 
   const [autoSpeak, setAutoSpeak] = useState(true);
   const lastAssistantSpokenRef = useRef<string>("");
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!recognition) setSupported(false);
   }, [recognition]);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const addUserAndReply = async (userText: string) => {
     const userMsg: ChatMsg = { role: "user", text: userText };
@@ -236,7 +243,10 @@ function SpeakingCoach() {
         </div>
       )}
 
-      <div className="mt-4 bg-gray-50 border border-gray-200 rounded-2xl p-3 h-72 overflow-y-auto">
+      <div
+        ref={chatContainerRef}
+        className="mt-4 bg-gray-50 border border-gray-200 rounded-2xl p-3 h-72 overflow-y-auto"
+      >
         {messages
           .filter((m) => m.role !== "system")
           .map((m, idx) => (
