@@ -32,7 +32,7 @@ const lessons: Lesson[] = [
   {
     id: 3,
     title: 'English Vocabulary: Daily Life',
-    timeLeft: '5 min left',
+    timeLeft: '15 min left',
     progress: 90,
     icon: '📖',
     iconBg: 'bg-blue-100',
