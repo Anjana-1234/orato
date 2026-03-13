@@ -19,6 +19,8 @@ import Quiz from "./pages/Quiz";
 import QuizDetail from "./pages/QuizDetail";
 import ListeningQuiz from "./pages/ListeningQuiz";
 import ListeningDetail from "./pages/ListeningDetail";
+import ReadingTask from "./pages/ReadingTask";
+import ReadingDetail from "./pages/ReadingDetail";
 import VisualCardsPage from "./pages/VisualCardsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -103,6 +105,23 @@ function App() {
 
           {/* Visual Cards */}
           <Route path="/visual-cards" element={<VisualCardsPage />} />
+
+          <Route
+            path="/reading"
+            element={
+            <ProtectedRoute>
+            <ReadingTask />
+            </ProtectedRoute>
+          }
+          />
+          <Route
+            path="/reading/:id"
+            element={
+            <ProtectedRoute>
+            <ReadingDetail />
+            </ProtectedRoute>
+            }
+          />
 
           {/* 404 Not Found */}
           <Route path="*" element={<NotFound />} />
