@@ -128,90 +128,18 @@ export const getStats = async (req, res) => {
 export const getContinueLearning = async (req, res) => {
   try {
     const userId = req.user._id;
-    const skillLevel = req.user.skillLevel || 'beginner';
     
     const lessons = await Lesson.find({ userId }).sort({ order: 1 });
-    
-    const grammarProgress = await GrammarProgress.findOne({ userId, skillLevel });
-    const completedGrammarLevels = grammarProgress?.completedLevels?.length || 0;
-    const totalGrammarLevels = 10;
-    const grammarProgressPercent = Math.round((completedGrammarLevels / totalGrammarLevels) * 100);
-    const nextGrammarLevel = grammarProgress?.currentLevel || 1;
-
-    let completedReading = 0;
-    let totalReading = 10;
-    try {
-      const readingProgress = await ReadingProgress.find({ userId, level: skillLevel });
-      completedReading = readingProgress.filter(r => r.completed).length;
-    } catch (e) {
-      console.error('Error fetching reading progress:', e);
-    }
-
-    let completedListening = 0;
-    let totalListening = 10;
-    try {
-      const ListeningProgress = (await import('../models/listeningProgress.js')).default;
-      const listeningProgress = await ListeningProgress.find({ userId, level: skillLevel });
-      completedListening = listeningProgress.filter(l => l.completed).length;
-    } catch (e) {
-      console.error('Error fetching listening progress:', e);
-    }
-    
-    const grammarLesson = {
-      id: 'grammar',
-      title: `Grammar Practice - Level ${nextGrammarLevel}`,
-      category: 'Grammar',
-      timeLeft: '10 min left',
-      totalTime: 10,
-      progress: grammarProgressPercent,
-      icon: '📝',
-      iconBg: 'bg-purple-100',
-      lastAccessed: grammarProgress?.updatedAt || new Date(),
-      isGrammar: true,
-      completedLevels: completedGrammarLevels,
-      totalLevels: totalGrammarLevels,
-      points: grammarProgress?.totalScore || 0
-    };
-
-    const readingLesson = {
-      id: 'reading',
-      title: `Reading Tasks - ${completedReading}/${totalReading} completed`,
-      category: 'Reading',
-      timeLeft: '15 min left',
-      totalTime: 15,
-      progress: Math.round((completedReading / totalReading) * 100),
-      icon: '📚',
-      iconBg: 'bg-green-100',
-      lastAccessed: new Date(),
-      isReading: true,
-      completedLevels: completedReading,
-      totalLevels: totalReading
-    };
-
-    const listeningLesson = {
-      id: 'listening',
-      title: `Listening Tasks - ${completedListening}/${totalListening} completed`,
-      category: 'Listening',
-      timeLeft: '20 min left',
-      totalTime: 20,
-      progress: Math.round((completedListening / totalListening) * 100),
-      icon: '🎧',
-      iconBg: 'bg-orange-100',
-      lastAccessed: new Date(),
-      isListening: true,
-      completedLevels: completedListening,
-      totalLevels: totalListening
-    };
 
     res.status(200).json({
       status: 'success',
       data: {
-        lessons: [...lessons.map(l => ({
+        lessons: lessons.map(l => ({
           id: l._id, title: l.title, category: l.category,
           timeLeft: l.timeLeft, totalTime: l.totalTime,
           progress: l.progress, icon: l.icon, iconBg: l.iconBg,
           lastAccessed: l.lastAccessed
-        })), grammarLesson, readingLesson, listeningLesson]
+        }))
       }
     });
   } catch (error) {

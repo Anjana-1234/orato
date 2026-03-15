@@ -24,14 +24,6 @@ interface Lesson {
 
 const defaultLessons: Lesson[] = [
   {
-    id: 3,
-    title: "English Vocabulary: Daily Life",
-    timeLeft: "5 min left",
-    progress: 0,
-    icon: "📖",
-    iconBg: "bg-blue-100",
-  },
-  {
     id: 4,
     title: "Visual Vocabulary Cards",
     timeLeft: "10 min left",
@@ -86,28 +78,14 @@ export default function ContinueLearning({
       try {
         const res = await dashboardService.getContinueLearning();
         if (res.data?.lessons) {
-          // Filter out only the default lessons, keep Grammar, Reading, Listening from backend
-          const filteredLessons = res.data.lessons.filter(
-            (lesson: Lesson) =>
-              !lesson.isGrammar &&
-              !lesson.isReading &&
-              !lesson.isListening &&
-              !lesson.title?.toLowerCase().includes("grammar") &&
-              !lesson.title?.toLowerCase().includes("reading") &&
-              !lesson.title?.toLowerCase().includes("listening")
-          );
-          
-          // Get Grammar, Reading, Listening lessons
-          const grammarLesson = res.data.lessons.find((l: Lesson) => l.isGrammar);
-          const readingLesson = res.data.lessons.find((l: Lesson) => l.isReading);
-          const listeningLesson = res.data.lessons.find((l: Lesson) => l.isListening);
-          
-          // Combine: Grammar, Reading, Listening first, then other lessons
-          const skillLessons = [grammarLesson, readingLesson, listeningLesson].filter(Boolean);
-          setLessons([...skillLessons, ...filteredLessons]);
+          // Only use default lessons, ignore backend Grammar/Reading/Listening
+          setLessons(defaultLessons);
+        } else {
+          setLessons(defaultLessons);
         }
       } catch (error) {
         console.error("Failed to fetch lessons:", error);
+        setLessons(defaultLessons);
       } finally {
         setLoading(false);
       }
