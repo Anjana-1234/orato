@@ -1,4 +1,4 @@
-const BASE_URL = `${window.config.backendUrl}/grammar`;
+const BASE_URL = `${window.config?.backendUrl || 'http://localhost:5002/api'}/grammar`;
 
 const getToken = (): string | null => {
   const token = localStorage.getItem('token');
