@@ -134,7 +134,7 @@ export default function ContinueLearning({
     } else if (lesson.title === "Vocabulary Practice") {
       navigate("/vocabulary");
     } else if (lesson.title === "Grammar Practice") {
-      navigate("/quiz");
+      navigate("/grammar");
     } else {
       onLessonClick?.(lesson.id, lesson.title);
     }
