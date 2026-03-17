@@ -1,6 +1,4 @@
 import User from '../models/user.js';
-import Quiz from '../models/quiz.js';
-import QuizResult from '../models/quizResult.js';
 import ListeningContent from '../models/listeningContent.js';
 import ListeningProgress from '../models/listeningProgress.js';
 import ReadingContent from '../models/readingContent.js';
@@ -22,26 +20,7 @@ export const checkAndUpgradeLevel = async (userId) => {
     const currentLevel = user.skillLevel || 'beginner';
     if (currentLevel === 'advanced') return { upgraded: false };
 
-    // Standardize level string for Quiz model (Beginner, Intermediate, Advanced)
-    const quizLevel = currentLevel.charAt(0).toUpperCase() + currentLevel.slice(1);
-
-    // 1. Check Vocabulary Quizzes (Need index of 10 completed)
-    const vocabularyQuizzes = await Quiz.find({ 
-      difficulty: quizLevel, 
-      category: 'Vocabulary' 
-    }).distinct('_id');
-    
-    const completedVocabCount = await QuizResult.find({
-      userId,
-      quizId: { $in: vocabularyQuizzes },
-      score: 100
-    }).distinct('quizId');
-
-    if (completedVocabCount.length < 10 && completedVocabCount.length < vocabularyQuizzes.length) {
-      return { upgraded: false, reason: 'Vocabulary incomplete' };
-    }
-
-    // 2. Check Listening Lab (Need 10 completed)
+    // 1. Check Listening Lab (Need 10 completed)
     const listeningItems = await ListeningContent.find({ level: currentLevel }).distinct('_id');
     const completedListeningCount = await ListeningProgress.countDocuments({
       userId,
@@ -53,7 +32,7 @@ export const checkAndUpgradeLevel = async (userId) => {
       return { upgraded: false, reason: 'Listening incomplete' };
     }
 
-    // 3. Check Reading Tasks (Need 10 completed)
+    // 2. Check Reading Tasks (Need 10 completed)
     const readingItems = await ReadingContent.find({ level: currentLevel }).distinct('_id');
     const completedReadingCount = await ReadingProgress.countDocuments({
       userId,
@@ -65,13 +44,13 @@ export const checkAndUpgradeLevel = async (userId) => {
       return { upgraded: false, reason: 'Reading incomplete' };
     }
 
-    // 4. Check Grammar Levels (Need 10 completed)
+    // 3. Check Grammar Levels (Need 10 completed)
     const grammarProg = await GrammarProgress.findOne({ userId, skillLevel: currentLevel });
     if (!grammarProg || grammarProg.completedLevels.length < 10) {
       return { upgraded: false, reason: 'Grammar incomplete' };
     }
 
-    // If we reached here, user has completed all 4 categories!
+    // If we reached here, user has completed all 3 categories!
     const levelOrder = ['beginner', 'intermediate', 'advanced'];
     const nextLevelIndex = levelOrder.indexOf(currentLevel) + 1;
     const nextLevel = levelOrder[nextLevelIndex];

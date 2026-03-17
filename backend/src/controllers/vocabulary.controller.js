@@ -1,5 +1,6 @@
 import VocabularyContent from "../models/vocabularyContent.js";
 import VocabularyProgress from "../models/vocabularyProgress.js";
+import User from "../models/user.js";
 
 // GET /api/vocabulary
 export const getAllVocabularyContent = async (req, res) => {
@@ -113,6 +114,11 @@ export const submitVocabularyAnswers = async (req, res) => {
       totalQuestions,
       correctAnswers,
       answers: gradedAnswers,
+    });
+
+    // Update user's lessonsDone
+    await User.findByIdAndUpdate(user._id, {
+      $inc: { 'stats.lessonsDone': 1 }
     });
 
     const feedback = task.questions.map((q) => {

@@ -154,16 +154,8 @@ const GrammarQuiz: React.FC = () => {
     }
   };
 
-  const handleRetry = () => {
-    setCurrentQuestion(0);
-    setAnswers([] as {questionId: string, selected: number}[]);
-    setSelectedAnswer(null);
-    setResult(null);
-    setError("");
-  };
-
   const handleComplete = () => {
-    navigate("/quiz");
+    navigate("/grammar");
   };
 
   if (loading) {
@@ -187,7 +179,7 @@ const GrammarQuiz: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Error</h2>
             <p className="text-gray-500 mb-6">{error}</p>
             <button
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/grammar")}
               className="px-6 py-3 bg-green-500 text-white rounded-xl font-semibold hover:bg-green-600 transition-all"
             >
               Back to Grammar
@@ -335,20 +327,9 @@ const GrammarQuiz: React.FC = () => {
             )}
 
             <div className="flex gap-3">
-              {!isPassed && (
-                <button
-                  onClick={handleRetry}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50 transition-colors"
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  Try Again
-                </button>
-              )}
               <button
                 onClick={handleComplete}
-                className={`flex-1 py-3 rounded-xl bg-green-500 text-white font-medium hover:bg-green-600 transition-colors ${
-                  !isPassed ? "" : "w-full"
-                }`}
+                className="flex-1 py-3 rounded-xl bg-green-500 text-white font-medium hover:bg-green-600 transition-colors w-full"
               >
                 {isPassed ? "Continue →" : "Back to Grammar"}
               </button>
@@ -366,7 +347,7 @@ const GrammarQuiz: React.FC = () => {
       <main className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-2xl">
           <button
-            onClick={() => navigate("/quiz")}
+            onClick={() => navigate("/grammar")}
             className="flex items-center gap-2 text-gray-500 hover:text-gray-700 mb-6 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />

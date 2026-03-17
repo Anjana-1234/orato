@@ -15,8 +15,6 @@ import AssessmentResults from "./pages/AssessmentResults";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import GoogleCallback from "./pages/GoogleCallback";
-import Quiz from "./pages/Quiz";
-import QuizDetail from "./pages/QuizDetail";
 import ListeningQuiz from "./pages/ListeningQuiz";
 import ListeningDetail from "./pages/ListeningDetail";
 import ReadingTask from "./pages/ReadingTask";
@@ -57,10 +55,6 @@ function App() {
           <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
           <Route path="/setting" element={<ProtectedRoute><Setting /></ProtectedRoute>} />
           
-          {/* Quiz Routes */}
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/quiz/:id" element={<QuizDetail />} />
-
           {/* Listening Routes */}
           <Route 
             path="/listening" 

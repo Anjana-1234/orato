@@ -23,7 +23,6 @@ import chatRoutes from "./routes/chat-routes.js";
 import { verifyEmailConfig } from "./services/emailService.js";
 import protect from "./middleware/authMiddleware.js";
 import dashboardRoutes from "./routes/dashboard-routes.js";
-import quizRoutes from "./routes/quiz-routes.js"
 import listeningRoutes from "./routes/listening-routes.js"
 import readingRoutes from "./routes/reading-routes.js"
 import vocabularyRoutes from "./routes/vocabulary-routes.js"
@@ -84,7 +83,6 @@ app.use("/api/progress", progressRoutes);
 app.use("/api/cards", cardRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/quiz", quizRoutes);
 app.use("/api/listening", listeningRoutes);
 app.use("/api/reading", readingRoutes);
 app.use("/api/vocabulary", vocabularyRoutes);
