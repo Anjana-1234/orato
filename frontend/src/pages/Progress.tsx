@@ -10,7 +10,6 @@ import {
   Clock, 
   Star, 
   TrendingUp,
-  ChevronRight,
   Loader2 // Added for loading state
 } from 'lucide-react';
 import API from '../services/api';
@@ -336,19 +335,24 @@ export default function Progress() {
                     <div key={lesson.id} className={`group flex items-center justify-between p-4 rounded-2xl border transition-all hover:bg-green-500/[0.02] ${
                       darkMode ? 'border-gray-700/50 hover:border-green-500/50' : 'border-gray-100 hover:border-green-300'
                     } ${focusTask && lesson.title === focusTask ? 'ring-2 ring-green-300 ring-offset-1' : ''}`}>
-                      <div className="flex items-center gap-4">
+                      <div className="flex-1 flex items-center gap-4">
                         <div className="text-3xl bg-gray-100 dark:bg-gray-700 w-12 h-12 flex items-center justify-center rounded-xl">
                           {lesson.icon}
                         </div>
-                        <div>
+                        <div className="flex-1">
                           <h4 className="font-bold">{lesson.title}</h4>
                           <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
                             <span className="flex items-center gap-1"><Clock size={12}/> {lesson.duration}</span>
                             <span className="flex items-center gap-1 text-yellow-500 font-bold"><Star size={12} fill="currentColor"/> {lesson.score}%</span>
                           </div>
+                          <div className="mt-3 h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-500"
+                              style={{ width: `${Math.max(0, Math.min(100, lesson.score))}%` }}
+                            />
+                          </div>
                         </div>
                       </div>
-                      <ChevronRight className="text-gray-400 group-hover:text-green-500 transition-colors" />
                     </div>
                   ))
                 )}

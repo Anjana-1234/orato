@@ -192,7 +192,7 @@ export default function DailyChallenges() {
             </div>
           </div>
           {completedCount === challenges.length && (
-            <div className="text-2xl">🎉</div>
+            <div className="text-2xl"></div>
           )}
         </div>
       )}
