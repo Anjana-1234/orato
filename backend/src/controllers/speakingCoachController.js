@@ -1,42 +1,13 @@
-const getCoachReply = (userText) => {
-  const text = (userText || "").trim();
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
-  if (!text) {
-    return "Say something in English and I will help you practice.";
-  }
+const COACH_SYSTEM_PROMPT =
+  "You are a friendly English speaking coach. Correct grammar briefly, explain simply, and ask one short follow-up question. Keep replies short and clear for learners.";
 
-  const tips = [];
-
-  if (/\\bi am go\\b/i.test(text)) {
-    tips.push('Try: "I am going"');
-  }
-
-  if (/\\bhe go\\b/i.test(text)) {
-    tips.push('Try: "He goes"');
-  }
-
-  if (/\\bshe go\\b/i.test(text)) {
-    tips.push('Try: "She goes"');
-  }
-
-  if (/\\byesterday\\b/i.test(text) && /\\bgo\\b/i.test(text)) {
-    tips.push('Because you used "yesterday", use past tense: "went"');
-  }
-
-  const praise = "Nice! Your sentence is understandable.";
-  const question = "Tell me more about that. Why do you think so?";
-
-  if (tips.length > 0) {
-    return `${praise}\n\nSmall correction(s):\n- ${tips.join("\n- ")}\n\n${question}`;
-  }
-
-  return `${praise}\n\n${question}`;
-};
-
-const chatWithSpeakingCoach = async (req, res) => {
+export const chatWithSpeakingCoach = async (req, res) => {
   try {
     const { message } = req.body;
 
+    // Validate user message
     if (!message || !message.trim()) {
       return res.status(400).json({
         success: false,
@@ -44,22 +15,41 @@ const chatWithSpeakingCoach = async (req, res) => {
       });
     }
 
-    const reply = getCoachReply(message);
+    // Check API key at request time so the server can still start without it
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        message: "Gemini API key is not configured on the server.",
+      });
+    }
 
+    // Initialize Gemini client lazily
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    // Provide the system prompt and the user's message
+    const result = await model.generateContent({
+      contents: [
+        {
+          role: "user",
+          parts: [{ text: `${COACH_SYSTEM_PROMPT}\n\nUser: ${message}` }],
+        },
+      ],
+    });
+
+    const responseText = result.response.text();
+
+    // Send response to frontend
     return res.status(200).json({
       success: true,
       userMessage: message,
-      coachReply: reply,
+      coachReply: responseText,
     });
   } catch (error) {
-    console.error("Speaking coach error:", error);
+    console.error(`[${new Date().toISOString()}] Speaking coach AI error:`, error);
     return res.status(500).json({
       success: false,
-      message: "Server error while generating coach reply.",
+      message: "Failed to get AI coach reply from Gemini.",
     });
   }
-};
-
-module.exports = {
-  chatWithSpeakingCoach,
 };

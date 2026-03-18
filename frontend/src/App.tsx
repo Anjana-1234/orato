@@ -15,12 +15,16 @@ import AssessmentResults from "./pages/AssessmentResults";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import GoogleCallback from "./pages/GoogleCallback";
-import Quiz from "./pages/Quiz";
-import QuizDetail from "./pages/QuizDetail";
 import ListeningQuiz from "./pages/ListeningQuiz";
 import ListeningDetail from "./pages/ListeningDetail";
+import ReadingTask from "./pages/ReadingTask";
+import ReadingDetail from "./pages/ReadingDetail";
+import VocabularyTask from "./pages/VocabularyTask";
+import VocabularyDetail from "./pages/VocabularyDetail";
 import VisualCardsPage from "./pages/VisualCardsPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import GrammarLevels from "./pages/GrammarLevels";
+import GrammarQuiz from "./pages/GrammarQuiz";
 
 import { Toaster } from "react-hot-toast";
 
@@ -46,43 +50,11 @@ function App() {
           <Route path="/auth/google/success" element={<GoogleCallback />} />
 
           {/* Protected Routes - After Login */}
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/progress" 
-            element={
-              <ProtectedRoute>
-                <Progress />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/account" 
-            element={
-              <ProtectedRoute>
-                <Account />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/setting" 
-            element={
-              <ProtectedRoute>
-                <Setting />
-              </ProtectedRoute>
-            } 
-          />
-
-          {/* Quiz Routes */}
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/quiz/:id" element={<QuizDetail />} />
-
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+          <Route path="/account" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+          <Route path="/setting" element={<ProtectedRoute><Setting /></ProtectedRoute>} />
+          
           {/* Listening Routes */}
           <Route 
             path="/listening" 
@@ -100,24 +72,72 @@ function App() {
               </ProtectedRoute>
             } 
           />
+          {/* Grammar Quiz Routes */}
+          <Route 
+            path="/grammar" 
+            element={
+              <ProtectedRoute>
+                <GrammarLevels />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/grammar/:level" 
+            element={
+              <ProtectedRoute>
+                <GrammarQuiz />
+              </ProtectedRoute>
+            } 
+          />
 
           {/* Visual Cards */}
           <Route path="/visual-cards" element={<VisualCardsPage />} />
 
+          <Route
+            path="/reading"
+            element={
+            <ProtectedRoute>
+            <ReadingTask />
+            </ProtectedRoute>
+          }
+          />
+          <Route
+            path="/reading/:id"
+            element={
+            <ProtectedRoute>
+            <ReadingDetail />
+            </ProtectedRoute>
+            }
+          />
+          <Route path="/vocabulary" element={<ProtectedRoute><VocabularyTask /></ProtectedRoute>} />
+          <Route path="/vocabulary/:id" element={<ProtectedRoute><VocabularyDetail /></ProtectedRoute>} />
+
           {/* 404 Not Found */}
-          <Route path="*" element={<NotFound />} />
+          <Route
+            path="*"
+            element={
+              <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+                <div className="text-center p-8 bg-white rounded-2xl shadow-xl">
+                  <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
+                  <h2 className="text-2xl font-semibold text-gray-600 mb-4">
+                    Page Not Found
+                  </h2>
+                  <p className="text-gray-500 mb-6">
+                    The page you're looking for doesn't exist.
+                  </p>
+                  <a
+                    href="/"
+                    className="inline-block px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg no-underline"
+                  >
+                    Go to Home
+                  </a>
+                </div>
+              </div>
+            }
+          />
         </Routes>
       </div>
     </Router>
-  );
-}
-
-// 404 Not Found Component
-function NotFound() {
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
-      
-    </div>
   );
 }
 

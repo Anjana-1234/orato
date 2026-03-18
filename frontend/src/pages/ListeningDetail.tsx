@@ -16,6 +16,8 @@ import {
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { listeningService } from "../services/listeningService";
+import { dashboardService } from "../services/dashboardService";
+import axios from "axios";
 
 interface Question {
   id: number;
@@ -57,6 +59,7 @@ const ListeningDetail: React.FC = () => {
   const [item, setItem] = useState<ListeningData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [audioSettings, setAudioSettings] = useState<any>(null);
 
   // Audio state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -98,6 +101,24 @@ const ListeningDetail: React.FC = () => {
       window.speechSynthesis.cancel();
     };
   }, [id]);
+
+  // Fetch audio settings mapping
+  useEffect(() => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      try {
+        const user = JSON.parse(stored);
+        const userId = user.id || user._id;
+        axios.get(`${window.config.backendUrl}/settings/${userId}`)
+          .then(res => {
+            if (res.data.settings?.audioDisplay) {
+              setAudioSettings(res.data.settings.audioDisplay);
+            }
+          })
+          .catch(err => console.error("Could not fetch user settings", err));
+      } catch(e) {}
+    }
+  }, []);
 
   // Animate content on load
   useEffect(() => {
@@ -147,7 +168,24 @@ const ListeningDetail: React.FC = () => {
 
     const utterance = new SpeechSynthesisUtterance(item.content);
     utterance.lang = "en-US";
-    utterance.rate = item.level === "beginner" ? 0.8 : item.level === "intermediate" ? 0.9 : 1.0;
+    
+    // Default rate based on level
+    let rate = item.level === "beginner" ? 0.8 : item.level === "intermediate" ? 0.9 : 1.0;
+    
+    // Override if settings exists
+    if (audioSettings?.playbackSpeed) {
+      const match = audioSettings.playbackSpeed.match(/(\d+\.\d+|\d+)/);
+      if (match) {
+        rate = parseFloat(match[1]);
+      }
+    }
+    utterance.rate = rate;
+    
+    // Apply volume
+    if (audioSettings?.volume !== undefined) {
+      utterance.volume = audioSettings.volume / 100;
+    }
+
     utterance.pitch = 1;
 
     utterance.onend = () => {
@@ -199,6 +237,12 @@ const ListeningDetail: React.FC = () => {
     try {
       const res = await listeningService.submit(id!, finalAnswers);
       setResult(res.data.result);
+      
+      try {
+        await dashboardService.updateChallenge('listening');
+      } catch (e) {
+        console.error('Failed to update challenge:', e);
+      }
     } catch (err) {
       console.error("Submit failed:", err);
       setResult({
