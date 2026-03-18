@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Navbar from "../components/Navbar"; // Correct import statement
 import Footer from '../components/Footer'; // Correct import statement for Footer
 
@@ -67,6 +68,7 @@ interface Summary {
 }
 
 export default function Progress() {
+  const [searchParams] = useSearchParams();
   const darkMode = false;
   // --- STATE MANAGEMENT ---
   const [completedLessons, setCompletedLessons] = useState<Lesson[]>([]);
@@ -75,6 +77,8 @@ export default function Progress() {
   const [summary, setSummary] = useState<Summary>({ totalLessons: 0, avgScore: 0, totalPoints: 0, dayStreak: 0, learningHours: 0 });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const focus = searchParams.get('focus');
+  const focusTask = searchParams.get('task');
 
   // --- DATA FETCHING LOGIC ---
   useEffect(() => {
@@ -110,6 +114,31 @@ export default function Progress() {
     if (weeklyStats.length === 0) return 1;
     return Math.max(...weeklyStats.map((d) => d.lessons));
   }, [weeklyStats]);
+
+  useEffect(() => {
+    if (!focus) return;
+    const sectionMap: Record<string, string> = {
+      lessons: 'progress-lessons',
+      challenges: 'progress-weekly',
+      skills: 'progress-weekly',
+      milestones: 'progress-milestones',
+    };
+    const sectionId = sectionMap[focus];
+    if (!sectionId) return;
+
+    const timer = setTimeout(() => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        section.classList.add('ring-2', 'ring-green-300', 'ring-offset-2');
+        setTimeout(() => {
+          section.classList.remove('ring-2', 'ring-green-300', 'ring-offset-2');
+        }, 1800);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [focus, focusTask, isLoading]);
 
   if (isLoading) {
     return (
@@ -178,7 +207,7 @@ export default function Progress() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-6">
-            <div className={`rounded-3xl p-8 border ${darkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}>
+            <div id="progress-lessons" className={`rounded-3xl p-8 border transition-all duration-300 ${darkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}>
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-xl font-bold">Recent Lessons</h2>
                 <button className="text-sm font-semibold text-green-500 hover:underline">View All</button>
@@ -191,7 +220,7 @@ export default function Progress() {
                   completedLessons.map((lesson) => (
                     <div key={lesson.id} className={`group flex items-center justify-between p-4 rounded-2xl border transition-all hover:bg-green-500/[0.02] ${
                       darkMode ? 'border-gray-700/50 hover:border-green-500/50' : 'border-gray-100 hover:border-green-300'
-                    }`}>
+                    } ${focusTask && lesson.title === focusTask ? 'ring-2 ring-green-300 ring-offset-1' : ''}`}>
                       <div className="flex items-center gap-4">
                         <div className="text-3xl bg-gray-100 dark:bg-gray-700 w-12 h-12 flex items-center justify-center rounded-xl">
                           {lesson.icon}
@@ -213,7 +242,7 @@ export default function Progress() {
           </div>
 
           <div className="lg:col-span-4 space-y-8">
-            <div className={`rounded-3xl p-6 border ${darkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}>
+            <div id="progress-weekly" className={`rounded-3xl p-6 border transition-all duration-300 ${darkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}>
               <h2 className="text-lg font-bold mb-6">Weekly Activity</h2>
               <div className="flex items-end justify-between gap-2 h-40">
                 {weeklyStats.map((stat) => (
@@ -234,14 +263,14 @@ export default function Progress() {
               </div>
             </div>
 
-            <div className={`rounded-3xl p-6 border ${darkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}>
+            <div id="progress-milestones" className={`rounded-3xl p-6 border transition-all duration-300 ${darkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}>
               <h2 className="text-lg font-bold mb-6">Recent Milestones</h2>
               <div className="space-y-6">
                 {recentActivities.length === 0 ? (
                   <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>No recent milestones.</p>
                 ) : (
                   recentActivities.map((activity) => (
-                    <div key={activity.id} className="flex items-center gap-4">
+                    <div key={activity.id} className={`flex items-center gap-4 ${focusTask && activity.title.includes(focusTask) ? 'rounded-lg ring-2 ring-green-300 p-2' : ''}`}>
                       <div className="text-2xl bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg">{activity.icon}</div>
                       <div className="flex-1">
                         <p className="text-sm font-bold leading-none">{activity.title}</p>
