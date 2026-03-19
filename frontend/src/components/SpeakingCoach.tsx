@@ -255,8 +255,11 @@ function SpeakingCoach() {
               className={`flex mb-3 ${m.role === "user" ? "justify-end" : "justify-start"
                 }`}
             >
-              <div className="max-w-[78%] p-3 rounded-2xl bg-white border border-gray-100 shadow-sm whitespace-pre-wrap">
-                <div className="text-xs text-gray-500 mb-1">
+              <div className={`max-w-[78%] p-3 rounded-2xl border shadow-sm whitespace-pre-wrap ${
+  m.role === "user"
+    ? "bg-green-100 border-green-200"
+    : "bg-white border-gray-100"
+}`}>                <div className="text-xs text-gray-500 mb-1">
                   {m.role === "user" ? "You" : "Coach"}
                 </div>
                 {m.text}
