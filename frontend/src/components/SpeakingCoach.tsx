@@ -170,7 +170,7 @@ function SpeakingCoach() {
   };
 
   return (
-    <div className="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm">
+    <div className="rounded-2xl bg-white border border-gray-200 p-5 shadow-sm h-full flex flex-col">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold">Speaking Practice (AI Coach)</h2>
@@ -245,7 +245,7 @@ function SpeakingCoach() {
 
       <div
         ref={chatContainerRef}
-        className="mt-4 bg-gray-50 border border-gray-200 rounded-2xl p-3 h-72 overflow-y-auto"
+        className="mt-4 bg-gray-50 border border-gray-200 rounded-2xl p-3 flex-1 min-h-[18rem] overflow-y-auto"
       >
         {messages
           .filter((m) => m.role !== "system")
