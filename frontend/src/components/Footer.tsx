@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  isLandingPageMode?: boolean;
+}
+
+const Footer: React.FC<FooterProps> = ({ isLandingPageMode = false }) => {
   const handleSocialClick = (platform: string) => {
     console.log(`Navigate to ${platform}`);
     // TO DO: Add social media URLs
@@ -11,7 +15,7 @@ const Footer: React.FC = () => {
     <footer className="gradient-dark text-white pt-12 pb-6 mt-auto">
       {/* 4 Column Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 ${isLandingPageMode ? 'lg:grid-cols-3' : 'lg:grid-cols-4'}`}>
 
           {/* Column 1: Brand */}
           <div>
@@ -20,37 +24,39 @@ const Footer: React.FC = () => {
               To deliver a personalized, step-by-step language learning journey.            </p>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div>
-            <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
-            <ul className="flex flex-col gap-1">
-              <li>
-                <Link to="/" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/dashboard" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link to="/progress" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
-                  Progress
-                </Link>
-              </li>
-              <li>
-                <Link to="/setting" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
-                  Setting
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
-                  About Us
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Column 2: Quick Links - hidden in landing page mode */}
+          {!isLandingPageMode && (
+            <div>
+              <h4 className="text-lg font-semibold mb-6">Quick Links</h4>
+              <ul className="flex flex-col gap-1">
+                <li>
+                  <Link to="/" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/dashboard" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
+                    Dashboard
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/progress" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
+                    Progress
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/setting" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
+                    Setting
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="text-text-light hover:text-light-purple transition-colors text-sm no-underline inline-block hover:translate-x-1 transition-transform">
+                    About Us
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
 
           {/* Column 3: Follow Us */}
           <div>
@@ -81,7 +87,6 @@ const Footer: React.FC = () => {
               </a>
             </div>
           </div>
-
 
           {/* Column 4: Contact Info */}
           <div>

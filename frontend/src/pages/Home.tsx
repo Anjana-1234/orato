@@ -37,7 +37,7 @@ const Home = () => {
             <div className="backdrop-blur-md bg-black/20 border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl">
               
               {/* Animated Welcome Text */}
-              <h1 className="text-5xl md:text-5xl font-black mb-4 leading-tight animate-fade-in-up">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 leading-tight animate-fade-in-up">
                 <span className="text-white drop-shadow-2xl block">Welcome to</span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-emerald-300 to-green-400 animate-gradient drop-shadow-2xl block">
                   ORATO
@@ -52,34 +52,39 @@ const Home = () => {
                 Unlock smarter, personalized lessons designed to accelerate your fluency.
               </p>
 
-              {/* CTA Buttons - only for non logged in users */}
-              {!isLoggedIn && (
-              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
-              <Link
-                to="/signup"
-                className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-base hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 text-center no-underline"
-              >
-              Get Started Free
-              </Link>
-              <Link
-              to="/signin"
-              className="px-8 py-3 bg-white/20 backdrop-blur-sm text-white border-2 border-white/40 rounded-xl font-bold text-base hover:bg-white/30 transition-all shadow-2xl hover:scale-105 text-center no-underline"
-              >
-              Sign In
-              </Link>
-              </div>
-              )}
+              {/* CTA Buttons - hidden in landing page mode */}
+              {!isLandingPageMode && (
+                <>
+                  {/* Get Started / Sign In - only for non logged in users */}
+                  {!isLoggedIn && (
+                    <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
+                      <Link
+                        to="/signup"
+                        className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-base hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 text-center no-underline"
+                      >
+                        Get Started Free
+                      </Link>
+                      <Link
+                        to="/signin"
+                        className="px-8 py-3 bg-white/20 backdrop-blur-sm text-white border-2 border-white/40 rounded-xl font-bold text-base hover:bg-white/30 transition-all shadow-2xl hover:scale-105 text-center no-underline"
+                      >
+                        Sign In
+                      </Link>
+                    </div>
+                  )}
 
-              {/* Go to Dashboard - only for logged in users */}
-              {isLoggedIn && (
-                <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
-                <Link
-                  to="/dashboard"
-                  className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-base hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 text-center no-underline"
-                >
-                Let’s Begin →
-                </Link>
-              </div>
+                  {/* Go to Dashboard - only for logged in users */}
+                  {isLoggedIn && (
+                    <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-400">
+                      <Link
+                        to="/dashboard"
+                        className="px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-base hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 text-center no-underline"
+                      >
+                        Let's Begin →
+                      </Link>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -97,14 +102,14 @@ const Home = () => {
             </div>
 
             {/* Main Heading */}
-            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
               Unlock Your Language Potential with
               <br />
               <span className="text-green-600">Personalized AI</span>
             </h1>
 
             {/* Subheading */}
-            <p className="text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
               Learn at your own pace with AI-powered lessons tailored to your skill level. 
               From beginner to advanced, Orato adapts to your learning journey.
             </p>
@@ -112,7 +117,7 @@ const Home = () => {
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto">
               <div className="bg-white rounded-xl p-6 shadow-md">
-                <div className="text-4xl font-bold text-green-600">10K+</div>
+                <div className="text-4xl font-bold text-green-600">40+</div>
                 <div className="text-gray-600 mt-2">Active Learners</div>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
@@ -120,7 +125,7 @@ const Home = () => {
                 <div className="text-gray-600 mt-2">Languages</div>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
-                <div className="text-4xl font-bold text-green-600">4.9</div>
+                <div className="text-4xl font-bold text-green-600">8.9</div>
                 <div className="text-gray-600 mt-2">User Rating</div>
               </div>
             </div>
@@ -142,7 +147,7 @@ const Home = () => {
             <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
               Platform Features
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Why Choose Orato?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -151,7 +156,7 @@ const Home = () => {
           </div>
 
           {/* Features Grid */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
             {/* Feature 1 - Personalized Learning - GREEN */}
             <div className="group relative">
@@ -263,7 +268,7 @@ const Home = () => {
         <div className="relative z-10 max-w-7xl mx-auto px-4">
           
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               How Orato Works
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -272,7 +277,7 @@ const Home = () => {
           </div>
 
           {/* Steps Grid */}
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             
             {/* Step 1 - Create Account - GREEN */}
             <div className="group relative">
@@ -398,7 +403,7 @@ const Home = () => {
             <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-4">
               See The Difference
             </div>
-            <h2 className="text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
               Why Orato Beats Traditional Learning
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -586,7 +591,7 @@ const Home = () => {
             <div>
               
               {/* Headline */}
-              <h2 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4 leading-tight">
                 Stop Dreaming.
                 <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
@@ -595,7 +600,7 @@ const Home = () => {
               </h2>
 
               {/* Description */}
-              <p className="text-lg text-gray-300 mb-6 leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-300 mb-6 leading-relaxed">
                 Your journey to fluency starts today. Join thousands who transformed their lives with just 15 minutes a day.
               </p>
 
@@ -627,27 +632,31 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* CTA Button */}
-              {!isLoggedIn ? (
-                  <Link
-                    to="/signup"
-                    className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 no-underline"
-                  >
-                  <span>Begin Your Journey</span>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
+              {/* CTA Button - hidden in landing page mode */}
+              {!isLandingPageMode && (
+                <>
+                  {!isLoggedIn ? (
+                    <Link
+                      to="/signup"
+                      className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 no-underline"
+                    >
+                      <span>Begin Your Journey</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
                     </Link>
                   ) : (
-                <Link
-                  to="/dashboard"
-                  className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 no-underline"
-                  >
-                  <span>Continue Learning</span>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                  </Link>
+                    <Link
+                      to="/dashboard"
+                      className="inline-flex items-center gap-3 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl font-bold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-2xl hover:shadow-green-500/50 hover:scale-105 no-underline"
+                    >
+                      <span>Continue Learning</span>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </Link>
+                  )}
+                </>
               )}
 
               {/* Social Proof */}
@@ -659,7 +668,7 @@ const Home = () => {
                   <div className="w-8 h-8 rounded-full bg-gray-500 border-2 border-gray-900"></div>
                 </div>
                 <div className="text-gray-400 text-xs">
-                  <span className="text-white font-bold">2,847 people</span> joined this week
+                  <span className="text-white font-bold">10+ people</span> joined this week
                 </div>
               </div>
 
@@ -678,8 +687,8 @@ const Home = () => {
         </div>
       </div>
 
-      {/* CONDITIONAL: Only show Footer in website mode */}
-      {!isLandingPageMode && <Footer />}
+      {/* Footer always visible, Quick Links hidden in landing page mode */}
+      <Footer isLandingPageMode={isLandingPageMode} />
 
     </div>
   );
