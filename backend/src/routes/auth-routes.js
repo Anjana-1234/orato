@@ -35,7 +35,7 @@ router.get('/google',
  */
 router.get('/google/callback',
   passport.authenticate('google', {
-    failureRedirect: '/api/auth/google/failure',
+    failureRedirect: '/orato/backend-qu/v1.0/auth/google/failure',
     session: false, // We use JWT, not sessions
   }),
   googleAuthSuccess
